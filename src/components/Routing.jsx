@@ -1,28 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import L from 'leaflet';
 import { useMap } from 'react-leaflet';
 import 'leaflet-routing-machine';
 import "../css/Style.css";
 
-const Routing = ({ setOpen, setRouteInfo }) => {
-  const map = useMap();
 
-  useEffect(() => {
-    const current = new L.LatLng(52.520007, 13.404954);
-    L.circleMarker(current, { radius: 8, color: 'blue' }).addTo(map);
+const Routing = ({ setOpen, setRouteInfo, myLocation }) => {
+  const map = useMap();
   
+  useEffect(() => {
+    if (!myLocation || !myLocation.latitude || !myLocation.longitude) return;
+    const current = new L.LatLng(myLocation.latitude, myLocation.longitude);
+    console.log(current)
+    L.circleMarker(current, { radius: 8, color: 'blue' }).addTo(map);
+    map.flyTo(current, 13);
     const routeControl = L.Routing.control({
       show: true,
       fitSelectedRoutes: false,
       plan: false,
       routeWhileDragging: true,
       showAlternatives: true,
-      altLineOptions: {
+      lineOptions: {
         styles: [{ color: 'blue', opacity: 0.8, weight: 5 }],
       },
-      lineOptions: {
+      altLineOptions: {
         styles: [{ color: 'blue', opacity: 0.5, weight: 5 }],
       },
+     
     }).addTo(map);
   
     map.on('click', (e) => {
@@ -42,7 +46,7 @@ const Routing = ({ setOpen, setRouteInfo }) => {
         duration,
         destination: `${destination.lat.toFixed(5)}, ${destination.lng.toFixed(5)}`
       });
-      await 3;
+
       setTimeout(() => {
         const container = document.querySelector('.leaflet-routing-container');
         const target = document.getElementById('leaflet-routing-wrapper');
@@ -56,7 +60,7 @@ const Routing = ({ setOpen, setRouteInfo }) => {
       map.off('click');
       map.removeControl(routeControl);
     };
-  }, [map, setOpen, setRouteInfo]);
+  }, [map, setOpen, setRouteInfo, myLocation]);
   
   
 

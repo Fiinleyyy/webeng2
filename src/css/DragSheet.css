@@ -1,26 +1,50 @@
 .InfoButton{
-    background-color: black;
+    background-color: blue;
     border: none;
     border-radius: 1000px;
-    width: 45vw;
-    height: 5vh;
+    width: 50%;
+    min-height: 25px;
+    height: 5%;
     display:block;
     color: white;
     align-content: center;
+    font-weight: bold;
 }
 .RouteButton{
-    background-color: black;
+    background-color: blue;
     border: none;
     border-radius: 1000px;
-    width: 45vw;
-    height: 5vh;
+    width: 50%;
+    min-height: 25px;
+    height: 5%;
     display:block;
     color: white;
     align-content: center;
+    font-weight: bold;
 }
 .ButtonWrapper {
     display: flex;
     justify-content: flex-start;
     gap: 10px; 
-    padding: 16px;
-  }
+
+}
+.LargeScreenWikipediaInfo {
+    display: none;
+}
+.LargeScreenRouteInfo {
+    display: none
+}
+@media (min-width: 25cm) {
+    .ButtonWrapper{
+        display: none
+    }
+    .LargeScreenRouteInfo{
+        display:block
+    }
+    .LargeScreenWikipediaInfo{
+        display:block
+    }
+    .TextContent {
+        display:none
+    }
+}
