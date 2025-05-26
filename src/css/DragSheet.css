@@ -1,50 +1,56 @@
-.InfoButton{
-    background-color: blue;
-    border: none;
-    border-radius: 1000px;
-    width: 50%;
-    min-height: 25px;
-    height: 5%;
-    display:block;
-    color: white;
-    align-content: center;
-    font-weight: bold;
-}
-.RouteButton{
-    background-color: blue;
-    border: none;
-    border-radius: 1000px;
-    width: 50%;
-    min-height: 25px;
-    height: 5%;
-    display:block;
-    color: white;
-    align-content: center;
-    font-weight: bold;
-}
 .ButtonWrapper {
     display: flex;
     justify-content: flex-start;
-    gap: 10px; 
+    gap: 10px;
+}
 
+.RouteButton,
+.InfoButton {
+    background-color: blue;
+    border: none;
+    border-radius: 1000px;
+    width: 50%;
+    min-height: 25px;
+    height: 5%;
+    color: white;
+    font-weight: bold;
 }
-.LargeScreenWikipediaInfo {
-    display: none;
-}
+
+.LargeScreenWikipediaInfo,
 .LargeScreenRouteInfo {
-    display: none
+    display: none; /* Standardmäßig ausgeblendet */
 }
-@media (min-width: 25cm) {
-    .ButtonWrapper{
-        display: none
+
+/* Sobald der Bildschirm >900px ist, wechseln die Inhalte nebeneinander */
+@media (min-width: 900px) {
+    .ButtonWrapper {
+        display: none; /* Buttons verstecken */
     }
-    .LargeScreenRouteInfo{
-        display:block
+
+    .LargeScreenLayout {
+        display: flex;
+        flex-direction: row; /* Inhalte nebeneinander */
+        height: 100%;
     }
-    .LargeScreenWikipediaInfo{
-        display:block
+
+    .LargeScreenRouteInfo {
+        display: block;
+        flex: 1;
+        border-right: 1px solid #ccc;
+        padding: 10px;
+        overflow-y: auto;
+        min-width: 250px;
+        max-width: 300px;
     }
+
+    .LargeScreenWikipediaInfo {
+        display: block;
+        flex: 3;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
     .TextContent {
-        display:none
+        display: none; /* Wikipedia-Info für kleine Bildschirme verstecken */
     }
 }

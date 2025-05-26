@@ -5,6 +5,8 @@ import DragSheet from './DragSheet';
 import React, {useState} from "react";
 import DragSheetMobile from './DragSheetMobile';
 import GetGeoLocation from './GetGeoLocation';
+import NominatemRouting from './SelectRoute';
+
 const MapComponent = () => {
   const [isOpen, setOpen] = useState(false);
   const [routeInfo, setRouteInfo] = useState(null);
@@ -16,6 +18,7 @@ const MapComponent = () => {
   const position = [52.520007, 13.404954]
   return (
     <>
+    <NominatemRouting />
    <DragSheetMobile isOpen={isOpen} setOpen={setOpen} routeInfo={routeInfo}/>
     <MapContainer
       center={position}
@@ -28,7 +31,9 @@ const MapComponent = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Routing setOpen={setOpen} setRouteInfo={setRouteInfo} myLocation={myLocation}/>
       <GetGeoLocation setMyLocation={setMyLocation}/>
+   
     </MapContainer> 
+    
     </>
   )
 }

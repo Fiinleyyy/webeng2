@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import MapComponent from './Map';
 import {
- 
+  App
 } from 'framework7-react';
 
 const MyApp = () => {
   return (
-    <div>
+    <App>
       <MapComponent />
-    </div>
+    </App>
   )
 }
 export default MyApp;
