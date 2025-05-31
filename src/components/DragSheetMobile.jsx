@@ -1,18 +1,106 @@
 import { Sheet } from 'react-modal-sheet';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "framework7-react";
 import "../css/DragSheet.css";
 
 const DragSheetMobile = ({ isOpen, setOpen, routeInfo }) => {
-  const [activeTab, setActiveTab] = useState('route'); // 'route' oder 'info'
+  const [activeTab, setActiveTab] = useState('route');
+
+  const minimizedHeight = 60;
+  const buttonHeight = 30;
+  const fullHeight = window.innerHeight * 0.5;
+
+  const [sheetHeight, setSheetHeight] = useState(isOpen ? fullHeight : minimizedHeight - buttonHeight);
+
+  const startY = useRef(null);
+  const startHeight = useRef(null);
+
+  useEffect(() => {
+    setSheetHeight(isOpen ? fullHeight : minimizedHeight - buttonHeight);
+  }, [isOpen, fullHeight]);
+
+  useEffect(() => {
+    if (routeInfo) {
+      setOpen(true);
+    }
+  }, [routeInfo, setOpen]);
+
+  const onDragStart = (e) => {
+    startY.current = e.touches ? e.touches[0].clientY : e.clientY;
+    startHeight.current = sheetHeight;
+    document.body.style.userSelect = 'none';
+  };
+
+  const onDragMove = (e) => {
+    if (startY.current === null) return;
+    const currentY = e.touches ? e.touches[0].clientY : e.clientY;
+    const delta = startY.current - currentY;
+    let newHeight = startHeight.current + delta;
+
+    if (newHeight > fullHeight) newHeight = fullHeight;
+    if (newHeight < minimizedHeight - buttonHeight) newHeight = minimizedHeight - buttonHeight;
+
+    setSheetHeight(newHeight);
+  };
+
+  const onDragEnd = () => {
+    document.body.style.userSelect = 'auto';
+
+    if (sheetHeight > (minimizedHeight - buttonHeight + (fullHeight - (minimizedHeight - buttonHeight)) / 2)) {
+      setSheetHeight(fullHeight);
+      setOpen(true);
+    } else {
+      setSheetHeight(minimizedHeight - buttonHeight);
+      setOpen(false);
+    }
+
+    startY.current = null;
+    startHeight.current = null;
+  };
+
+  const onSheetClose = () => {
+    setOpen(false);
+    setSheetHeight(minimizedHeight - buttonHeight);
+  };
 
   return (
-    <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-      <Sheet.Container style={{ height: '50vh', width: '100%' }}>
-        <Sheet.Header />
-        <Sheet.Content>
-          <Sheet.Scroller>
-            {/* Mobile Ansicht mit Buttons zum Wechseln */}
+    <>
+      <Sheet isOpen={true} onClose={onSheetClose}>
+        <Sheet.Container
+          style={{
+            height: sheetHeight,
+            width: '100%',
+            transition: 'height 0.3s ease',
+            overflow: 'hidden',
+            overflowX: 'hidden',
+            borderTop: '1px solid #ccc',
+            position: 'fixed',
+            bottom: buttonHeight,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            backgroundColor: 'white',
+          }}
+          onClick={e => e.stopPropagation()}
+        >
+          <Sheet.Header
+            style={{ cursor: 'grab', height: 30 }}
+            onMouseDown={onDragStart}
+            onTouchStart={onDragStart}
+            onMouseMove={onDragMove}
+            onTouchMove={onDragMove}
+            onMouseUp={onDragEnd}
+            onTouchEnd={onDragEnd}
+            onMouseLeave={onDragEnd}
+          />
+          <Sheet.Content
+            style={{
+              height: sheetHeight - 30,
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              padding: '10px',
+            }}
+          >
             <div className='SmallScreenLayout shared-layout-padding'>
               <div className='ButtonWrapper'>
                 <Button onClick={() => setActiveTab('route')} className='RouteButton'>
@@ -24,64 +112,66 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo }) => {
               </div>
               <div className="TextContent">
                 {activeTab === 'route' ? (
-                    <>
-                        {routeInfo ? (
-                            <p style={{ fontWeight: 'bold', fontSize: 22 }}>
-                                Distanz: {routeInfo.distance} km, Zeit: {routeInfo.duration} min
-                                <br />
-                                Koordinaten: {routeInfo.destination}
-                            </p>
-                        ) : (
-                            <p>Bitte auf Karte klicken…</p>
-                        )}
-
-                        {/* Hier wird routing-wrapper für kleine Screens hinzugefügt */}
-                        <div
-                            id="leaflet-routing-wrapper"
-                            style={{
-                                overflowX: "hidden",
-                                width: '100%',
-                                display: activeTab === 'route' ? 'block' : 'none',
-                            }}
-                        />
-                    </>
+                  <>
+                    {routeInfo ? (
+                      <p>
+                        Distanz: {routeInfo.distance} km, Zeit: {routeInfo.duration} min
+                        <br />
+                        Koordinaten: {routeInfo.destination}
+                      </p>
+                    ) : (
+                      <p>Bitte auf Karte klicken…</p>
+                    )}
+                  </>
                 ) : (
-                    <p style={{ fontSize: 18 }}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
+                  <p>…Wikipedia Text…</p>
                 )}
+
+                <div
+                  id="leaflet-routing-wrapper"
+                  className={activeTab === 'route' ? 'routing-visible' : 'routing-hidden'}
+                />
               </div>
             </div>
+          </Sheet.Content>
+        </Sheet.Container>
 
-            {/* Desktop Ansicht mit Wikipedia und Route nebeneinander */}
-            <div className='LargeScreenLayout shared-layout-padding'>    
-              <div className='LargeScreenRouteInfo' id="leaflet-routing-wrapper">
-                {routeInfo ? (
-                  <p style={{ fontWeight: 'bold', fontSize: 22 }}>
-                    Distanz: {routeInfo.distance} km, Zeit: {routeInfo.duration} min
-                    <br />
-                    Koordinaten: {routeInfo.destination}
-                  </p>
-                ) : (
-                  <p>Bitte auf Karte klicken…</p>
-                )}
-              </div>
+        <Sheet.Backdrop
+          onClick={onSheetClose}
+          style={{ display: sheetHeight > minimizedHeight - buttonHeight ? 'block' : 'none' }}
+        />
+      </Sheet>
 
-              <div className='LargeScreenWikipediaInfo'>
-                <p style={{ fontWeight: 'bold', fontSize: 22 }}>Wikipedia</p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                  Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-            </div>
-
-          </Sheet.Scroller>
-        </Sheet.Content>
-      </Sheet.Container>
-      <Sheet.Backdrop />
-    </Sheet>
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: buttonHeight,
+          backgroundColor: '#eee',
+          borderTop: '1px solid #ccc',
+          textAlign: 'center',
+          lineHeight: `${buttonHeight}px`,
+          cursor: 'pointer',
+          zIndex: 1001,
+          userSelect: 'none',
+        }}
+        onClick={() => {
+          if (sheetHeight === minimizedHeight - buttonHeight) {
+            setSheetHeight(fullHeight);
+            setOpen(true);
+          } else {
+            setSheetHeight(minimizedHeight - buttonHeight);
+            setOpen(false);
+          }
+        }}
+      >
+        {sheetHeight === minimizedHeight - buttonHeight
+          ? '↑ Zum Vergrößern ziehen oder klicken'
+          : '✕ Schließen'}
+      </div>
+    </>
   );
 };
 
