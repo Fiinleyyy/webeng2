@@ -1,9 +1,10 @@
 import { Sheet } from 'react-modal-sheet';
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "framework7-react";
+import { SearchWikipedia } from './WikipediaAPI';
 import "../css/DragSheet.css";
 
-const DragSheetMobile = ({ isOpen, setOpen, routeInfo }) => {
+const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
   const [activeTab, setActiveTab] = useState('route');
 
   const minimizedHeight = 60;
@@ -17,7 +18,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo }) => {
 
   useEffect(() => {
     setSheetHeight(isOpen ? fullHeight : minimizedHeight - buttonHeight);
-  }, [isOpen, fullHeight]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (routeInfo) {
@@ -124,7 +125,13 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo }) => {
                     )}
                   </>
                 ) : (
-                  <p>…Wikipedia Text…</p>
+                  <>
+                    {geocodeInfo?.city ? (
+                      <SearchWikipedia searchTerm={geocodeInfo.city} />
+                    ) : (
+                      <p>Wikipedia-Artikel wird geladen…</p>
+                    )}
+                  </>
                 )}
 
                 <div

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { useMap } from 'react-leaflet';
 import 'leaflet-routing-machine';
@@ -6,15 +6,17 @@ import "../css/Style.css";
 
 const Routing = ({ setOpen, setRouteInfo, myLocation }) => {
   const map = useMap();
+  const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (!myLocation || !myLocation.latitude || !myLocation.longitude) return;
+    if (!myLocation?.latitude || !myLocation?.longitude) return;
 
     const current = new L.LatLng(myLocation.latitude, myLocation.longitude);
     L.circleMarker(current, { radius: 8, color: 'blue' }).addTo(map);
     map.flyTo(current, 13);
 
-    const routeControl = L.Routing.control({
+    // Nur einmal initial erstellen
+    routingControlRef.current = L.Routing.control({
       show: true,
       fitSelectedRoutes: false,
       plan: false,
@@ -38,14 +40,17 @@ const Routing = ({ setOpen, setRouteInfo, myLocation }) => {
 
     const handleClick = (e) => {
       const destination = e.latlng;
-      routeControl.setWaypoints([current, destination]);
-      setOpen(true);
+
+      if (routingControlRef.current) {
+        routingControlRef.current.setWaypoints([current, destination]);
+        setOpen(true);
+      }
     };
 
     map.on('click', handleClick);
     map.on('touchstart', handleClick);
 
-    routeControl.on('routesfound', ({ routes, waypoints }) => {
+    routingControlRef.current.on('routesfound', ({ routes, waypoints }) => {
       const summary = routes[0];
       const distance = summary.totalDistance / 1000;
       const duration = Math.round(summary.totalTime / 60);
@@ -60,13 +65,15 @@ const Routing = ({ setOpen, setRouteInfo, myLocation }) => {
       setTimeout(moveRoutingUI, 1);
     });
 
-    // UI sofort verschieben, falls gerendert
     setTimeout(moveRoutingUI, 100);
 
     return () => {
       map.off('click', handleClick);
       map.off('touchstart', handleClick);
-      map.removeControl(routeControl);
+      if (routingControlRef.current) {
+        map.removeControl(routingControlRef.current);
+        routingControlRef.current = null;
+      }
     };
   }, [map, setOpen, setRouteInfo, myLocation]);
 
