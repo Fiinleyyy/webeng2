@@ -47,6 +47,7 @@
     "globals": "^16.1.0",
     "postcss-preset-env": "^10.1.6",
     "vite": "^6.3.5",
+    "vite-plugin-mkcert": "^1.17.8",
     "workbox-cli": "^7.3.0"
   }
 }

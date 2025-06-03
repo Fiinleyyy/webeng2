@@ -9,18 +9,6 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination }) => {
   const routingControlRef = useRef(null);
   const startMarkerRef = useRef(null);
 
-  // Custom Marker-Icon
-  const locationIcon = L.divIcon({
-    className: 'custom-location-icon',
-    html: `
-      <div class="outer-circle">
-        <div class="inner-circle"></div>
-      </div>
-    `,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
-
   // Routing UI verschieben
   const moveRoutingUI = () => {
     const container = document.querySelector('.leaflet-routing-container');
@@ -33,30 +21,30 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination }) => {
   useEffect(() => {
     if (!myLocation?.latitude || !myLocation?.longitude) return;
 
-    const defaultStart = new L.LatLng(myLocation.latitude, myLocation.longitude);
-    const startLatLng = start?.lat && start?.lon
+    const UsersPosition = new L.LatLng(myLocation.latitude, myLocation.longitude);
+    const startPosition = start?.lat && start?.lon
       ? new L.LatLng(start.lat, start.lon)
-      : defaultStart;
+      : UsersPosition;
 
     // Startmarker setzen
     if (startMarkerRef.current) {
       map.removeLayer(startMarkerRef.current);
     }
-    L.circleMarker(defaultStart, {
+    L.circleMarker(UsersPosition, {
       radius: 8,
       color: 'red',
       fillColor: 'red',
       fillOpacity: 0.6,
     }).addTo(map);
     
-    L.circleMarker(startLatLng, {
+    L.circleMarker(startPosition, {
       radius: 8,
       color: 'blue',
       fillColor: 'blue',
       fillOpacity: 0.6,
     }).addTo(map);
   
-    map.flyTo(startLatLng, 16);
+    map.flyTo(startPosition, 16);
 
 
     // Routing Control initialisieren (nur einmal)
@@ -90,8 +78,8 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination }) => {
 
     // Klicklistener für Routing durch Klick auf die Karte
     const handleClick = (e) => {
-      const endLatLng = e.latlng;
-      routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
+      const destinationPosition = e.latlng;
+      routingControlRef.current.setWaypoints([startPosition, destinationPosition]);
       setOpen(true);
     };
 
@@ -115,14 +103,14 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination }) => {
   useEffect(() => {
     if (!destination || !myLocation?.latitude || !myLocation?.longitude) return;
 
-    const startLatLng = start?.lat && start?.lon
+    const startPosition = start?.lat && start?.lon
       ? new L.LatLng(start.lat, start.lon)
       : new L.LatLng(myLocation.latitude, myLocation.longitude);
 
-    const endLatLng = new L.LatLng(destination.lat, destination.lon);
+    const destinationPosition = new L.LatLng(destination.lat, destination.lon);
 
     if (routingControlRef.current) {
-      routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
+      routingControlRef.current.setWaypoints([startPosition, destinationPosition]);
     }
   }, [destination, start, myLocation, setOpen]);
 
