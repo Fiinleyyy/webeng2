@@ -1,5 +1,5 @@
-import { MapContainer, TileLayer } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
+import { MapContainer, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import Routing from './Routing';
 import React, { useState } from "react";
 import DragSheetMobile from './DragSheetMobile';
@@ -15,22 +15,20 @@ const MapComponent = () => {
     error: null
   });
   const [destination, setDestination] = useState(null);
-  const [start, setStart] = useState(null);
+  const [start, setStart] = useState(null)
   const position = [52.520007, 13.404954];
   const [routeInfo, setRouteInfo] = useState(null);
-
-  // 🔄 Automatisches Reverse-Geocoding
   const geocodeInfo = useReverseGeocodeOnRouteInfo(routeInfo);
 
   return (
     <>
-      <NominatemRouting setDestination={setDestination} setStart={setStart} />
+      <NominatemRouting setDestination={setDestination} myLocation={myLocation} setStart={setStart} />
       <GetGeoLocation setMyLocation={setMyLocation} />
       <DragSheetMobile
         isOpen={isOpen}
         setOpen={setOpen}
         routeInfo={routeInfo}
-        geocodeInfo={geocodeInfo} // ✅ Stadtinfo fürs Wikipedia-Modul
+        geocodeInfo={geocodeInfo}
       />
       <MapContainer
         center={position}
