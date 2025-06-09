@@ -4,9 +4,24 @@ import { useMap } from 'react-leaflet';
 import 'leaflet-routing-machine';
 import "../css/Style.css";
 
+
+// This file is responsible for the whole routing part of the PWA
+// The standard start position is set by the users location according to the GetGeoCoordinates.jsx
+// The start point can be changed by typing a location in to the above input field in the right top corner
+// Typing in any value calls the SelectRoute.jsx where the place is being search using the nominatim API
+// The map will jump tho the chosen location
+// If the user selects a destination either by clicking/touching any part of the map or typing his goal into the input filed underneath the one for the start position
+// a route from the start Posistion to the destination is being calculated and shown onto the map
+
 const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDestinationCoord }) => {
+
+  // map is being declared because the map component is being used to set markers and calculate routes in this file
   const map = useMap();
+
+
   const routingControlRef = useRef(null);
+
+
   const startMarkerRef = useRef(null);
 
 
