@@ -9,7 +9,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
 
   const minimizedHeight = 60;
   const buttonHeight = 30;
-  const fullHeight = window.innerHeight * 0.5;
+  const fullHeight = window.innerHeight * 0.3;
 
   const [sheetHeight, setSheetHeight] = useState(isOpen ? fullHeight : minimizedHeight - buttonHeight);
 
@@ -105,10 +105,10 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
             <div className='SmallScreenLayout shared-layout-padding'>
               <div className='ButtonWrapper'>
                 <Button onClick={() => setActiveTab('route')} className='RouteButton'>
-                  Routeninformation
+                  Route
                 </Button>
                 <Button onClick={() => setActiveTab('info')} className='InfoButton'>
-                  Wikipediainformation
+                  Wikipedia
                 </Button>
               </div>
               <div className="TextContent">
@@ -117,7 +117,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
                     {routeInfo ? (
                       <p>
                         Distanz: {routeInfo.distance} km, Zeit: {routeInfo.duration} min
-                        <br />
+                        <br /> 
                         Koordinaten: {routeInfo.destination}
                       </p>
                     ) : (
@@ -163,6 +163,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
           cursor: 'pointer',
           zIndex: 1001,
           userSelect: 'none',
+        
         }}
         onClick={() => {
           if (sheetHeight === minimizedHeight - buttonHeight) {

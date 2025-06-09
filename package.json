@@ -27,6 +27,7 @@
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "material-icons": "^1.13.14",
+    "mkcert": "^3.2.0",
     "motion": "^12.12.1",
     "prop-types": "^15.8.1",
     "react": "^19.1.0",
@@ -47,6 +48,7 @@
     "globals": "^16.1.0",
     "postcss-preset-env": "^10.1.6",
     "vite": "^6.3.5",
+    "vite-plugin-mkcert": "^1.17.8",
     "workbox-cli": "^7.3.0"
   }
 }

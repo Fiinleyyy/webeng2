@@ -1,17 +1,16 @@
-
 import path from 'path';
 import react from '@vitejs/plugin-react';
-
+import mkcert from 'vite-plugin-mkcert'; // ✅ hinzugefügt
 
 const SRC_DIR = path.resolve(__dirname, './src');
 const PUBLIC_DIR = path.resolve(__dirname, './public');
-const BUILD_DIR = path.resolve(__dirname, './www',);
-export default async () => {
+const BUILD_DIR = path.resolve(__dirname, './www');
 
-  return  {
+export default async () => {
+  return {
     plugins: [
       react(),
-
+      mkcert() // ✅ hinzugefügt
     ],
     root: SRC_DIR,
     base: '',
@@ -30,8 +29,8 @@ export default async () => {
       },
     },
     server: {
-      host: true,
+      https: true,   // ✅ HTTPS aktivieren
+      host: true     // ✅ Zugriff im Netzwerk erlauben (z. B. auf dem iPhone)
     },
-
   };
-}
+};

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "../css/SelectRoute.css";
 import { Card, CardContent, List, ListItem } from "framework7-react";
 
-const NominatemRouting = ({ setDestination, setStart, myLocation }) => {
+const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoord }) => {
   const [startPoint, setStartPoint] = useState("");
   const [endPoint, setEndPoint] = useState("");
   const [startSuggestions, setStartSuggestions] = useState([]);
@@ -85,7 +85,11 @@ const NominatemRouting = ({ setDestination, setStart, myLocation }) => {
           <input
             className='Input'
             type="text"
-            placeholder="type in end"
+            placeholder={
+              destinationCoord
+                ? `${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`
+                : "type in destination"
+            }
             value={endPoint}
             onChange={(e) => {
               setEndPoint(e.target.value);
