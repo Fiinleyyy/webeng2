@@ -27,11 +27,6 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
   }, [routeInfo, setOpen]);
 
   const onDragStart = (e) => {
-    const target = e.target;
-
-    const isScrollable = target.scrollHeight > target.clientHeight;
-    if (isScrollable) return; // ↪️ nicht ziehen, wenn ein scrollbarer Bereich getoucht wird
-
     startY.current = e.touches ? e.touches[0].clientY : e.clientY;
     startHeight.current = sheetHeight;
     document.body.style.userSelect = 'none';
@@ -64,25 +59,6 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
     startHeight.current = null;
   };
 
-  useEffect(() => {
-    const handleMove = (e) => onDragMove(e);
-    const handleEnd = () => onDragEnd();
-
-    if (startY.current !== null) {
-      document.addEventListener('mousemove', handleMove);
-      document.addEventListener('mouseup', handleEnd);
-      document.addEventListener('touchmove', handleMove);
-      document.addEventListener('touchend', handleEnd);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMove);
-      document.removeEventListener('mouseup', handleEnd);
-      document.removeEventListener('touchmove', handleMove);
-      document.removeEventListener('touchend', handleEnd);
-    };
-  }, [sheetHeight]);
-
   const onSheetClose = () => {
     setOpen(false);
     setSheetHeight(minimizedHeight - buttonHeight);
@@ -112,6 +88,11 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
             style={{ cursor: 'grab', height: 30 }}
             onMouseDown={onDragStart}
             onTouchStart={onDragStart}
+            onMouseMove={onDragMove}
+            onTouchMove={onDragMove}
+            onMouseUp={onDragEnd}
+            onTouchEnd={onDragEnd}
+            onMouseLeave={onDragEnd}
           />
           <Sheet.Content
             style={{
@@ -119,7 +100,6 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
               overflowY: 'auto',
               overflowX: 'hidden',
               padding: '10px',
-              WebkitOverflowScrolling: 'touch',
             }}
           >
             <div className='SmallScreenLayout shared-layout-padding'>
