@@ -24,7 +24,19 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
 
   const startMarkerRef = useRef(null);
 
+  // Custom Marker-Icon
+  const locationIcon = L.divIcon({
+    className: 'custom-location-icon',
+    html: `
+      <div class="outer-circle">
+        <div class="inner-circle"></div>
+      </div>
+    `,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  });
 
+  // Routing UI verschieben
   const moveRoutingUI = () => {
     const container = document.querySelector('.leaflet-routing-container');
     const target = document.getElementById('leaflet-routing-wrapper');
@@ -36,23 +48,29 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
   useEffect(() => {
     if (!myLocation?.latitude || !myLocation?.longitude) return;
 
-    const defaultStart = new L.LatLng(myLocation.latitude, myLocation.longitude);
-    const startLatLng = start?.lat && start?.lon
+    const UsersPosition = new L.LatLng(myLocation.latitude, myLocation.longitude);
+    const startPosition = start?.lat && start?.lon
       ? new L.LatLng(start.lat, start.lon)
-      : defaultStart;
+      : UsersPosition;
 
     // Marker setzen
     if (startMarkerRef.current) {
       map.removeLayer(startMarkerRef.current);
     }
-
     L.circleMarker(defaultStart, {
+      radius: 8,
+      color: 'red',
+      fillColor: 'red',
+      fillOpacity: 0.6,
+    }).addTo(map);
+    
+    L.circleMarker(startLatLng, {
       radius: 8,
       color: 'blue',
       fillColor: 'blue',
       fillOpacity: 0.6,
     }).addTo(map);
-
+  
     map.flyTo(startLatLng, 16);
 
     routingControlRef.current = L.Routing.control({
@@ -85,8 +103,8 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
     }).addTo(map);
 
     const handleClick = (e) => {
-      const endLatLng = e.latlng;
-      routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
+      const destinationPosition = e.latlng;
+      routingControlRef.current.setWaypoints([startPosition, destinationPosition]);
       setOpen(true);
       setDestinationCoord(endLatLng);
     };
@@ -117,15 +135,13 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       !myLocation?.longitude
     ) return;
 
-    const startLatLng = start?.lat && start?.lon
+    const startPosition = start?.lat && start?.lon
       ? new L.LatLng(start.lat, start.lon)
       : new L.LatLng(myLocation.latitude, myLocation.longitude);
 
-    const endLatLng = new L.LatLng(destination.lat, destination.lon);
+    const destinationPosition = new L.LatLng(destination.lat, destination.lon);
 
     if (routingControlRef.current) {
-      // Alte Route entfernen, neue setzen
-      routingControlRef.current.setWaypoints([]);
       routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
     }
   }, [destination, start, myLocation, setOpen]);
