@@ -87,3 +87,54 @@ Love Framework7? Support project by donating or pledging on:
 # Start Applikation with service worker using local ssl certificate
 
 `npx http-server www/ -S -C cert.pem -K key.pem -p 4443`
+
+
+# PWA Criteria
+
+## Progressive 
+
+The PWA is working on Edge, Chrome, Firefox and Safari
+
+## Responsive
+
+The PWA is responsive adpating to the screen size smoothly without any overheads
+
+## Connectivity Indipendent
+
+The PWA is not completely connectivity independent due to the use of multiple API's like the wikipedia API, Nominatim API for geocoding and reverse geocoding and the OpenStreetMap API. 
+The service worker tries to cache the Map and the nominatim results. This allows fast connection even if there is low internet power and even allows to look on the Map and get the users position of there is no internet connection.
+
+## App-like
+
+The PWA acts like a native application adapting perfectly to phone or ipad size as well.
+
+## Fresh
+
+The offline copy of the PWA updates when changes in the online version are made due to the service worker
+
+## Safe
+
+The PWA is routed on HTTPS. Therefor a personalized ssl certificate is being used. Without that, the application wouldn't be running on IOS because IOS blocks the call of HTTP websites completely.
+
+## Dicoverable
+
+fullfilled
+
+## Reengageable
+
+not yet fullfilled
+
+## Installable 
+
+Chrone:
+Firefox:
+Edge:
+Safari:
+
+## Linkable
+
+not yet
+
+## Sensorik
+
+The PWA uses access on native interface. In the case of this PWA it uses GPS to get the users current position
