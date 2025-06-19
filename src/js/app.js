@@ -19,8 +19,28 @@ import '../css/app.css';
 import App from '../components/app.jsx';
 
 // Init F7 React Plugin
-Framework7.use(Framework7React)
+Framework7.use(Framework7React);
 
 // Mount React App
 const root = createRoot(document.getElementById('app'));
 root.render(React.createElement(App));
+
+// =============================
+// ✅ Service Worker Registrierung
+// =============================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker registriert mit Scope:', registration.scope);
+
+        // Optional: sofortige Aktivierung bei Update
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      })
+      .catch((error) => {
+        console.error(' Service Worker Registrierung fehlgeschlagen:', error);
+      });
+  });
+}

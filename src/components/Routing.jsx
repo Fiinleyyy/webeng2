@@ -18,9 +18,7 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
   // map is being declared because the map component is being used to set markers and calculate routes in this file
   const map = useMap();
 
-
   const routingControlRef = useRef(null);
-
 
   const startMarkerRef = useRef(null);
 

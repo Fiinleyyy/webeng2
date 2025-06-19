@@ -75,3 +75,15 @@ framework7 assets --ui
 Love Framework7? Support project by donating or pledging on:
 - Patreon: https://patreon.com/framework7
 - OpenCollective: https://opencollective.com/framework7
+
+# Start PWA with service worker to cache Map and Nominatim and to Activate Fresh
+
+
+# After changes 
+
+`npm run build`
+`npx http-server www/ -S -C cert.pem -K key.pem -p 4443`
+
+# Start Applikation with service worker using local ssl certificate
+
+`npx http-server www/ -S -C cert.pem -K key.pem -p 4443`
