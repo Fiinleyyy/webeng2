@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "npm run dev",
-    "dev": "cross-env NODE_ENV=development vite",
+    "dev": "node start.js",
     "build": "cross-env NODE_ENV=production vite build && npx workbox generateSW workbox-config.js",
     "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
@@ -24,6 +24,7 @@
     "framework7": "^8.3.4",
     "framework7-icons": "^5.0.5",
     "framework7-react": "^8.3.4",
+    "inquirer": "^12.6.3",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "material-icons": "^1.13.14",
@@ -42,7 +43,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@vitejs/plugin-react": "^4.5.2",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.26.0",
