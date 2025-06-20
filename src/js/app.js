@@ -26,7 +26,7 @@ const root = createRoot(document.getElementById('app'));
 root.render(React.createElement(App));
 
 // =============================
-// ✅ Service Worker Registrierung
+//  Service Worker Registrierung
 // =============================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

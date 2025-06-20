@@ -5,7 +5,8 @@ module.exports = {
   ],
   globIgnores: [],
   ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
-  swDest: 'www/service-worker.js',
+  swDest: 'public/service-worker.js',
+  // Cache für Offline bzw. schnellen Zugriff
   runtimeCaching: [
     {
       // OpenStreetMap Tiles
@@ -33,7 +34,7 @@ module.exports = {
       },
     }
   ],
-  // Automatisch aktivieren und übernehmen
+  // Automatisch aktivieren und übernehmen, dadurch wird Fresh erstellt
   skipWaiting: true,
   clientsClaim: true,
 };

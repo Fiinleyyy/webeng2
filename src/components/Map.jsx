@@ -6,7 +6,6 @@ import DragSheetMobile from './DragSheetMobile';
 import GetGeoLocation from './GetGeoLocation';
 import NominatemRouting from './SelectRoute';
 import { useReverseGeocodeOnRouteInfo } from './ReverseGeocoding';
-import SyncRouteWithURL from './SyncRouteWithURL';
 
 // Main component where all PWA parts come together
 

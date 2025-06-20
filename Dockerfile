@@ -12,4 +12,5 @@ RUN npm run build
 # Expose app port
 EXPOSE 5173
 # Start the application
-CMD ["npx", "vite", "preview"]
+CMD ["npx", "vite", "preview", "--port", "5
+173", "--host"]

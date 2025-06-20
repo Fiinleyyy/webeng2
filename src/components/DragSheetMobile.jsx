@@ -59,6 +59,27 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
     startHeight.current = null;
   };
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (startY.current !== null) onDragMove(e);
+    };
+    const handleMouseUp = () => {
+      if (startY.current !== null) onDragEnd();
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleMouseMove);
+    document.addEventListener('touchend', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleMouseMove);
+      document.removeEventListener('touchend', handleMouseUp);
+    };
+  }, [sheetHeight]);
+
   const onSheetClose = () => {
     setOpen(false);
     setSheetHeight(minimizedHeight - buttonHeight);
@@ -88,18 +109,14 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
             style={{ cursor: 'grab', height: 30 }}
             onMouseDown={onDragStart}
             onTouchStart={onDragStart}
-            onMouseMove={onDragMove}
-            onTouchMove={onDragMove}
-            onMouseUp={onDragEnd}
-            onTouchEnd={onDragEnd}
-            onMouseLeave={onDragEnd}
           />
           <Sheet.Content
             style={{
-              height: sheetHeight - 30,
+              maxHeight: sheetHeight - 30,
               overflowY: 'auto',
               overflowX: 'hidden',
               padding: '10px',
+              WebkitOverflowScrolling: 'touch',
             }}
           >
             <div className='SmallScreenLayout shared-layout-padding'>
@@ -117,7 +134,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
                     {routeInfo ? (
                       <p>
                         Distanz: {routeInfo.distance} km, Zeit: {routeInfo.duration} min
-                        <br /> 
+                        <br />
                         Koordinaten: {routeInfo.destination}
                       </p>
                     ) : (
@@ -163,7 +180,6 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
           cursor: 'pointer',
           zIndex: 1001,
           userSelect: 'none',
-        
         }}
         onClick={() => {
           if (sheetHeight === minimizedHeight - buttonHeight) {
