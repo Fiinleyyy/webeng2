@@ -32,12 +32,19 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     }
   }, [endPoint, endCoords]);
 
+  // Reagiere auf Koordinaten-Updates (z. B. Klick oder Drag)
+  useEffect(() => {
+    if (destinationCoord) {
+      setEndPoint(`${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`);
+    }
+  }, [destinationCoord]);
+
   // Auswahl Start
   const handleStartSelect = (location) => {
     setStartPoint(location.display_name);
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
     setStartCoords(coords);
-    setStartSuggestions([]); // Liste schließen
+    setStartSuggestions([]);
     setStart({ name: location.display_name, lat: coords.lat, lon: coords.lon });
   };
 
@@ -45,7 +52,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     setEndPoint(location.display_name);
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
     setEndCoords(coords);
-    setEndSuggestions([]); // Liste schließen
+    setEndSuggestions([]);
     setDestination({ name: location.display_name, lat: coords.lat, lon: coords.lon });
   };
 
@@ -53,8 +60,6 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     <Card className='RoutingCard'>
       <CardContent className='CardContent'>
         <List className='InputList'>
-
-          {/* Start Input */}
           <input
             className='Input'
             type="text"
@@ -81,7 +86,6 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
             </List>
           )}
 
-          {/* End Input */}
           <input
             className='Input'
             type="text"
@@ -107,7 +111,6 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
               ))}
             </List>
           )}
-
         </List>
       </CardContent>
     </Card>

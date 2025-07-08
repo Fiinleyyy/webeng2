@@ -4,24 +4,10 @@ import { useMap } from 'react-leaflet';
 import 'leaflet-routing-machine';
 import "../css/Style.css";
 
-
-// This file is responsible for the whole routing part of the PWA
-// The standard start position is set by the users location according to the GetGeoCoordinates.jsx
-// The start point can be changed by typing a location in to the above input field in the right top corner
-// Typing in any value calls the SelectRoute.jsx where the place is being search using the nominatim API
-// The map will jump tho the chosen location
-// If the user selects a destination either by clicking/touching any part of the map or typing his goal into the input filed underneath the one for the start position
-// a route from the start Posistion to the destination is being calculated and shown onto the map
-
 const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDestinationCoord }) => {
-
-  // map is being declared because the map component is being used to set markers and calculate routes in this file
   const map = useMap();
-
   const routingControlRef = useRef(null);
-
   const startMarkerRef = useRef(null);
-
 
   const moveRoutingUI = () => {
     const container = document.querySelector('.leaflet-routing-container');
@@ -39,12 +25,12 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       ? new L.LatLng(start.lat, start.lon)
       : defaultStart;
 
-    // Marker setzen
     if (startMarkerRef.current) {
       map.removeLayer(startMarkerRef.current);
     }
 
-    L.circleMarker(defaultStart, {
+    // Blauer Startmarker
+    startMarkerRef.current = L.circleMarker(defaultStart, {
       radius: 8,
       color: 'blue',
       fillColor: 'blue',
@@ -66,6 +52,12 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       altLineOptions: {
         styles: [{ color: 'blue', opacity: 0.5, weight: 5 }],
       },
+      // ⛔ Hier wird Dragging deaktiviert
+      createMarker: function (i, waypoint, n) {
+        return L.marker(waypoint.latLng, {
+          draggable: false, // ❗ Beide Marker NICHT draggable
+        });
+      }
     }).on('routesfound', ({ routes, waypoints }) => {
       const summary = routes[0];
       const distance = summary.totalDistance / 1000;
@@ -81,6 +73,13 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       setOpen(true);
       setTimeout(moveRoutingUI, 1);
     }).addTo(map);
+
+    routingControlRef.current.on('waypointschanged', function (e) {
+      const newDest = e.waypoints[1]?.latLng;
+      if (newDest) {
+        setDestinationCoord(newDest);
+      }
+    });
 
     const handleClick = (e) => {
       const endLatLng = e.latlng;
@@ -122,7 +121,6 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
     const endLatLng = new L.LatLng(destination.lat, destination.lon);
 
     if (routingControlRef.current) {
-      // Alte Route entfernen, neue setzen
       routingControlRef.current.setWaypoints([]);
       routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
     }
