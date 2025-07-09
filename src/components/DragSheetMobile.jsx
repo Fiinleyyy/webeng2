@@ -4,12 +4,15 @@ import { Button } from "framework7-react";
 import { SearchWikipedia } from './WikipediaAPI';
 import "../css/DragSheet.css";
 
+// In this component the DragSheet which displays the Information abput the Route and the Wikipedia Article
+// It opens up by searching any destination either by using the input fields or clicking in the map
+
 const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
   const [activeTab, setActiveTab] = useState('route');
-
   const minimizedHeight = 0;
   const fullHeight = window.innerHeight * 0.3;
 
+  // If the State switches to "open" triggered by searching a destination, the Sheet takes place on the 30% of the bottom of the map, otherwise it is closed
   const [sheetHeight, setSheetHeight] = useState(isOpen ? fullHeight : minimizedHeight);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
           }}
           onClick={e => e.stopPropagation()}
         >
-          {/* Header mit Close-Button */}
+          {/* Header with closing button */}
           <Sheet.Header
             style={{
               height: 40,
@@ -115,15 +118,14 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
             </div>
           </Sheet.Content>
         </Sheet.Container>
-
-        {/* Nur anzeigen, wenn Sheet offen */}
+        {/* Only show this when Sheet is open */}
         <Sheet.Backdrop
           onClick={onSheetClose}
           style={{ display: isOpen ? 'block' : 'none' }}
         />
       </Sheet>
 
-      {/* Unten fixierter Öffnen-Button */}
+      {/* fixed button at the bottom to open up the Sheet */}
       {!isOpen && (
         <div
           style={{

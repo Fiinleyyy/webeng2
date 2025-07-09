@@ -8,12 +8,14 @@ function WikipediaResult(props) {
     return (
         <div>
             <h2><a href={props.url}>{props.loading ? <Skeleton/> : props.title}</a></h2>
-            <p dangerouslySetInnerHTML={props.loading ? <Skeleton/> : {__html: props.snippet}}></p>
-            {/* <a href={props.url}>{props.url}</p> */}
+            {props.loading ? (
+                <Skeleton count={3} />
+            ) : (
+                <p dangerouslySetInnerHTML={{__html: safeHTMLSnippet}}></p>
+            )}
         </div>
     )
 }
-
 // function WikipediaResult(props) {
 //     let safeHTMLSnippet = DOMPurify.sanitize(props.snippet);
 

@@ -15,6 +15,7 @@ const GetGeoLocation = ({setMyLocation}) => {
                   });
                 },
                 (error) => {
+                  // set location latitude and longitude to (0,0) if an error accurs
                   setMyLocation({
                     latitude: null,
                     longitude: null,
