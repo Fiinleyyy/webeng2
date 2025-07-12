@@ -1,4 +1,4 @@
-import React from 'react';
+
 import MapComponent from './Map';
 import {
   App

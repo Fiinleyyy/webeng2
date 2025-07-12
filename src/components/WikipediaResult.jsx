@@ -1,3 +1,4 @@
+import React from 'react';
 import DOMPurify from "dompurify"; // Library to sanitize potentially unsafe HTML
 import Skeleton from "react-loading-skeleton"; // UI component for loading placeholders
 import 'react-loading-skeleton/dist/skeleton.css'; // Styles for Skeleton
