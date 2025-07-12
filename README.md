@@ -6,98 +6,59 @@ A **React + Framework7** Progressive Web App (PWA) built using **Vite** as the b
 
 ## 📚 Table of Contents
 
-- [🐳 Docker Setup & Development Workflow](#-docker-setup--development-workflow)
-- [👨‍💻 Developing Inside Docker](#-developing-inside-docker)
-- [🧠 Using VSCode with Docker (Devcontainer)](#-using-vscode-with-docker-devcontainer)
-- [🛠 Framework7 CLI Setup](#-framework7-cli-setup)
-- [🚀 Getting Started](#-getting-started)
-- [📜 Available Scripts](#-available-scripts)
-- [⚡ Vite](#-vite)
-- [🌐 Progressive Web App (PWA)](#-progressive-web-app-pwa)
-- [🖼 Assets Management](#-assets-management)
-- [📁 Project Structure Highlights](#-project-structure-highlights)
-- [📚 Documentation & Resources](#-documentation--resources)
+- [WebEng2](#webeng2)
+  - [📚 Table of Contents](#-table-of-contents)
+  - [🐳 Docker Setup \& Development Workflow](#-docker-setup--development-workflow)
+    - [▶️ Run with Docker Compose](#️-run-with-docker-compose)
+  - [🧠 Using VSCode with Docker (Devcontainer)](#-using-vscode-with-docker-devcontainer)
+  - [🛠 Framework7 CLI Setup](#-framework7-cli-setup)
+  - [🚀 Getting Started](#-getting-started)
+    - [📦 Install Dependencies](#-install-dependencies)
+  - [📜 Available Scripts](#-available-scripts)
+  - [⚡ Vite](#-vite)
+  - [🌐 Progressive Web App (PWA)](#-progressive-web-app-pwa)
+  - [🖼 Assets Management](#-assets-management)
+  - [📁 Project Structure Highlights](#-project-structure-highlights)
+  - [📚 Documentation \& Resources](#-documentation--resources)
 
 ---
 
 ## 🐳 Docker Setup & Development Workflow
 
-You can run and develop this app fully inside a Docker container.
-
-### 🔧 Build the Docker Image
+### ▶️ Run with Docker Compose
 
 ```bash
-docker build -t webeng2 .
+cd docker
+docker-compose up --build
 ```
 
-### 🚀 Run the Container
-
-```bash
-docker run -p 4173:4173 webeng2
-```
-
-This serves the app in production mode on `http://localhost:4173`.
-
----
-
-## 👨‍💻 Developing Inside Docker
-
-To enable live development, including Git support and local file syncing, run the container with volume mounts:
-
-```bash
-docker run -it --rm -p 4173:4173 -v $(pwd):/app -w /app node:slim bash
-```
-
-Then inside the container:
-
-```bash
-npm install
-npm run dev
-```
-
-Your local files will be reflected inside the container. You can also use `git` inside this shell, as long as it's installed in the container or mounted via volumes.
-
-For Git inside the container:
-
-```bash
-apt update && apt install -y git
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
-```
+This builds the container and starts the Vite preview server. Open `http://localhost:4173` in your browser to view the app.
 
 ---
 
 ## 🧠 Using VSCode with Docker (Devcontainer)
 
-To work in VSCode inside the container, do the following:
+Development should be done **exclusively using the Devcontainer setup in VSCode**, which ensures proper environment configuration, Git integration, and live reload functionality.
 
-1. Make sure you have the **Remote - Containers** extension installed in VSCode.
-2. Create a `.devcontainer` folder in the root of the project.
-3. Add a `devcontainer.json` with this content:
+Steps:
 
-```json
-{
-  "name": "WebEng2 Dev",
-  "image": "node:slim",
-  "workspaceFolder": "/app",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/app,type=bind"
-  ],
-  "postCreateCommand": "npm install",
-  "customizations": {
-    "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint"]
-    }
-  }
-}
+1. Ensure you have the **Remote - Containers** extension installed in VSCode.
+2. Open the project folder in VSCode.
+3. Open the Command Palette: `Ctrl+Shift+P` → `Dev Containers: Reopen in Container`.
+4. VSCode will use the `.devcontainer/devcontainer.json` file to:
+    - Use the Docker Compose-based container
+    - Mount your local project directory into the container
+    - Forward port `4173` & `5173`
+    - Install Node dependencies via `npm install`
+    - Enable ESLint and GitHub CLI support
+
+Once inside the container, simply run:
+
+```bash
+npm run dev
 ```
 
-4. Reopen the project in container via the Command Palette:
-```
-> Remote-Containers: Reopen in Container
-```
-
-This gives you full Git integration, local file access, and the power of VSCode inside the container.
+The app will be served with hot reload at `http://localhost:5173`.
 
 ---
 
@@ -137,27 +98,25 @@ npm install
 
 ## 📜 Available Scripts
 
-| Script         | Description                                 |
-|----------------|---------------------------------------------|
-| `npm run dev`  | Start the development server (alias: `start`) |
-| `npm run build`| Build the app for production and generate service worker |
-| `npm run lint` | Run ESLint on the project source files      |
+| Script         | Description                                        |
+|----------------|----------------------------------------------------|
+| `npm run dev`  | Start the development server with hot reload       |
+| `npm run build`| Build the app for production                       |
+| `npm run lint` | Run ESLint on the project source files             |
 
 ---
 
 ## ⚡ Vite
 
-This project uses [Vite](https://vitejs.dev) for development and bundling. All source code is in the `/src` folder. The configuration file is located at `vite.config.js`.
+This project uses [Vite](https://vitejs.dev) for fast development and bundling. Source code resides in `/src`, and the config is in `vite.config.js`.
 
 ---
 
 ## 🌐 Progressive Web App (PWA)
 
-This project is a PWA. During development, consider disabling the service worker in dev tools or using "Update on reload".
+This project is a PWA. In development, disable the service worker in DevTools if necessary.
 
-### Service Worker
-
-A custom service worker is generated during the build via:
+To regenerate the service worker manually:
 
 ```bash
 npx workbox generateSW workbox-config.js
@@ -167,13 +126,13 @@ npx workbox generateSW workbox-config.js
 
 ## 🖼 Assets Management
 
-Source images for icons and splash screens are in the `assets-src` folder. To regenerate app assets:
+Source images for icons and splash screens are in `assets-src`. To regenerate assets:
 
 ```bash
 framework7 assets
 ```
 
-Or launch the Framework7 asset editor:
+Or use the asset editor UI:
 
 ```bash
 framework7 assets --ui
@@ -185,10 +144,11 @@ framework7 assets --ui
 
 - `src/` — Application source code
 - `public/` — Static files
-- `assets-src/` — Editable source assets (icons, splash screens)
-- `workbox-config.js` — Service worker config for Workbox
-- `vite.config.js` — Vite configuration
-- `Dockerfile` — Containerization setup
+- `assets-src/` — Editable source assets
+- `workbox-config.js` — Service worker configuration
+- `vite.config.js` — Vite config
+- `docker/` — Dockerfile and Compose setup
+- `.devcontainer/` — Devcontainer configuration for VSCode
 
 ---
 
@@ -196,7 +156,5 @@ framework7 assets --ui
 
 - [Framework7 Docs](https://framework7.io/docs/)
 - [Framework7 React](https://framework7.io/react/)
-- [Framework7 Icons](https://framework7.io/icons/)
 - [Vite Documentation](https://vitejs.dev/)
 - [Workbox Docs](https://developer.chrome.com/docs/workbox/)
-- [Community Forum](https://forum.framework7.io)
