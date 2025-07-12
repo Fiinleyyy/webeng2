@@ -1,5 +1,5 @@
 {
-  "name": "WebEng Devcontainer",
+  "name": "WebEng2",
   "dockerComposeFile": "../docker/docker-compose.yml",
   "service": "webapp",
   "workspaceFolder": "/app",
