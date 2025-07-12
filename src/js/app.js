@@ -26,13 +26,26 @@ Framework7.use(Framework7React);
 
 // Mount React App
 const root = createRoot(document.getElementById('app'));
+
+// Initialization of service worker
 root.render(React.createElement(App));
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service Worker registriert mit Scope:', registration.scope);
+      })
+      .catch(error => {
+        console.error('Service Worker Registrierung fehlgeschlagen:', error);
+      });
+  });
+}
 
 // Initialize notifications
 window.addEventListener('load', async () => {
   // Initialize the notification service
   const notificationsEnabled = await notificationService.init();
-  
+
   if (notificationsEnabled) {
     // Send welcome notification
     notificationService.sendWelcomeNotification();
