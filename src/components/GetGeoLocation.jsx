@@ -5,9 +5,11 @@ import { useEffect } from 'react';
 
 const GetGeoLocation = ({setMyLocation}) => {
     useEffect(() => {
+        // this gathers the users current position after getting his confirmation that the PWA is allowed to access it
         if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(
                 (position) => {
+                  // set the latitude and longitude of the user as the current Position
                   setMyLocation({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,

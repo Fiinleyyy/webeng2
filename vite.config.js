@@ -1,7 +1,6 @@
+// vite.config.js
 import path from 'path';
-import fs from 'fs';
 import react from '@vitejs/plugin-react';
-import mkcert from 'vite-plugin-mkcert';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,8 +10,8 @@ const SRC_DIR = path.resolve(__dirname, './src');
 const PUBLIC_DIR = path.resolve(__dirname, './public');
 const BUILD_DIR = path.resolve(__dirname, './www');
 
-export default {
-  plugins: [react(), mkcert()],
+export const sharedConfig = {
+  plugins: [react()],
   root: SRC_DIR,
   base: './',
   publicDir: PUBLIC_DIR,
@@ -28,11 +27,5 @@ export default {
     alias: {
       '@': SRC_DIR,
     },
-  },
-  server: {
-    https: true,
-    host: true,
-    port: 5173,
-    open: false,
   },
 };

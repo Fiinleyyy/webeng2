@@ -1,40 +1,50 @@
 import { useEffect, useState } from "react";
 import { WikipediaResult } from "./WikipediaResult";
 
+// Component to search Wikipedia using the MediaWiki API
 function SearchWikipedia({ searchTerm }) {
-    const [wikipediaResults, setWikipediaResults] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [wikipediaResults, setWikipediaResults] = useState([]); // Search result list
+    const [loading, setLoading] = useState(false); // Loading state
 
     useEffect(() => {
+        // Exit if no search term is provided
         if (!searchTerm) return;
 
         const baseUrl = "https://en.wikipedia.org/w/api.php";
+
+        // Helper function to build URL with query parameters
         const buildUrl = (baseUrl, searchParams) => {
             const queryString = new URLSearchParams(searchParams).toString();
             return `${baseUrl}?${queryString}`;
         };
 
+        // Fetch Wikipedia search results and resolve page URLs
         const fetchWikipediaResults = async () => {
-            setLoading(true);
+            setLoading(true); // Start loading
+
+            // First request: search for page titles matching the term
             const url1 = buildUrl(baseUrl, {
-                origin: "*",
+                origin: "*",           // Needed for CORS
                 action: "query",
                 format: "json",
-                list: "search",
+                list: "search",        // Search for pages
                 formatVersion: "2",
-                srsearch: searchTerm
+                srsearch: searchTerm   // The search term
             });
 
             const response1 = await fetch(url1);
             const data1 = await response1.json();
-            const results = data1.query?.search ?? [];
+            const results = data1.query?.search ?? []; // Extract search results
 
+            // Extract page IDs from search results
             const pageIds = results.map(r => r.pageid);
+
+            // Second request: get full URLs for the pages using page IDs
             const url2 = buildUrl(baseUrl, {
                 origin: "*",
                 action: "query",
                 prop: "info",
-                inprop: "url",
+                inprop: "url",          // Include full page URL
                 format: "json",
                 pageids: pageIds.join("|")
             });
@@ -43,19 +53,21 @@ function SearchWikipedia({ searchTerm }) {
             const data2 = await response2.json();
             const pages = data2.query?.pages ?? {};
 
+            // Attach full URL to each result
             results.forEach(r => {
                 r.url = pages[r.pageid]?.fullurl;
             });
 
-            setWikipediaResults(results);
-            setLoading(false);
+            setWikipediaResults(results); // Save final result list
+            setLoading(false);            // Stop loading
         };
 
-        fetchWikipediaResults();
-    }, [searchTerm]);
+        fetchWikipediaResults(); // Trigger fetch
+    }, [searchTerm]); // Run effect when searchTerm changes
 
     return (
         <section className="wikipedia-results">
+            {/* Render a list of WikipediaResult components */}
             {wikipediaResults.map((result) => (
                 <WikipediaResult
                     key={result.pageid}

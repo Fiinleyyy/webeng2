@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import "../css/SelectRoute.css";
 import { Card, CardContent, List, ListItem } from "framework7-react";
 
+// Component for selecting start and destination using Nominatim (OpenStreetMap)
 const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoord }) => {
-  const [startPoint, setStartPoint] = useState("");
-  const [endPoint, setEndPoint] = useState("");
-  const [startSuggestions, setStartSuggestions] = useState([]);
-  const [endSuggestions, setEndSuggestions] = useState([]);
-  const [startCoords, setStartCoords] = useState(null);
-  const [endCoords, setEndCoords] = useState(null);
+  const [startPoint, setStartPoint] = useState(""); // Text input for start
+  const [endPoint, setEndPoint] = useState("");     // Text input for destination
+  const [startSuggestions, setStartSuggestions] = useState([]); // Autocomplete suggestions for start
+  const [endSuggestions, setEndSuggestions] = useState([]);     // Autocomplete suggestions for destination
+  const [startCoords, setStartCoords] = useState(null); // Selected coordinates for start
+  const [endCoords, setEndCoords] = useState(null);     // Selected coordinates for destination
 
-  // Fetch für Start
+  // Fetch suggestions for start input
   useEffect(() => {
     if (startPoint.length > 2 && !startCoords) {
       fetch(`https://nominatim.openstreetmap.org/search?q=${startPoint}&format=json`)
@@ -21,7 +22,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     }
   }, [startPoint, startCoords]);
 
-  // Fetch für Ziel
+  // Fetch suggestions for destination input
   useEffect(() => {
     if (endPoint.length > 2 && !endCoords) {
       fetch(`https://nominatim.openstreetmap.org/search?q=${endPoint}&format=json`)
@@ -32,22 +33,23 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     }
   }, [endPoint, endCoords]);
 
-  // Reagiere auf Koordinaten-Updates (z. B. Klick oder Drag)
+  // When coordinates change externally (e.g. from map click), update end input field with fitting coordinates to keep the UI up to date with the searched destination
   useEffect(() => {
     if (destinationCoord) {
       setEndPoint(`${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`);
     }
   }, [destinationCoord]);
 
-  // Auswahl Start
+  // Handle selection of a start location from suggestions
   const handleStartSelect = (location) => {
-    setStartPoint(location.display_name);
+    setStartPoint(location.display_name); // Fill input with selected address
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
-    setStartCoords(coords);
-    setStartSuggestions([]);
-    setStart({ name: location.display_name, lat: coords.lat, lon: coords.lon });
+    setStartCoords(coords);               // Save selected coordinates
+    setStartSuggestions([]);             // Clear suggestion list
+    setStart({ name: location.display_name, lat: coords.lat, lon: coords.lon }); // Update parent state
   };
 
+  // Handle selection of a destination from suggestions
   const handleEndSelect = (location) => {
     setEndPoint(location.display_name);
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
@@ -60,6 +62,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     <Card className='RoutingCard'>
       <CardContent className='CardContent'>
         <List className='InputList'>
+          {/* Start point input field */}
           <input
             className='Input'
             type="text"
@@ -71,9 +74,10 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
             }
             onChange={(e) => {
               setStartPoint(e.target.value);
-              setStartCoords(null);
+              setStartCoords(null); // Reset selected coords to allow new search
             }}
           />
+          {/* Start location suggestions */}
           {startSuggestions.length > 0 && (
             <List>
               {startSuggestions.map((location, index) => (
@@ -86,6 +90,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
             </List>
           )}
 
+          {/* Destination input field */}
           <input
             className='Input'
             type="text"
@@ -97,9 +102,10 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
             value={endPoint}
             onChange={(e) => {
               setEndPoint(e.target.value);
-              setEndCoords(null);
+              setEndCoords(null); // Reset selected coords to allow new search
             }}
           />
+          {/* Destination location suggestions */}
           {endSuggestions.length > 0 && (
             <List>
               {endSuggestions.map((location, index) => (

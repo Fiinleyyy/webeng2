@@ -10,7 +10,9 @@
     "dev": "node start.js",
     "build": "cross-env NODE_ENV=production vite build && npx workbox generateSW workbox-config.js",
     "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "dev:http": "vite --config vite.config.http.js",
+    "dev:https": "vite --config vite.config.https.js"
   },
   "browserslist": [
     "IOS >= 15",
