@@ -4,7 +4,7 @@ import { sharedConfig } from './vite.config.js';
 
 export default {
   ...sharedConfig,
-  root: '.',
+  root: 'src',
   build: {
     ...sharedConfig.build,
     outDir: 'dist',
