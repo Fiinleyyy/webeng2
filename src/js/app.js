@@ -30,14 +30,26 @@ root.render(React.createElement(App));
 
 // Initialize notifications
 window.addEventListener('load', async () => {
-  // Initialize the notification service
+  // Initialize notification service
   const notificationsEnabled = await notificationService.init();
-  
+
   if (notificationsEnabled) {
-    // Send welcome notification
     notificationService.sendWelcomeNotification();
     console.log('Notifications initialized successfully');
   } else {
     console.log('Notifications not available or permission denied');
   }
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/service-worker.js');
+      console.log('✅ Service Worker registered with scope:', registration.scope);
+    } catch (err) {
+      console.error('❌ Service Worker registration failed:', err);
+    }
+  } else {
+    console.warn('Service Worker not supported in this browser.');
+  }
 });
+
