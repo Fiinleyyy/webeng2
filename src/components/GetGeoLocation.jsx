@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { InfoMessage } from './InfoMessages';
+import React from 'react';
 
 // In this file the Geolocation of the users current positition using the Geolocation API.
 // Result which either is (latitude, longitude, or error) is passed to setMyLocation

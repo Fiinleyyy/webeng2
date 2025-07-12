@@ -71,6 +71,19 @@ const SheetComponent = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
               <div className="TextContent">
                 {activeTab === 'route' ? (
                   <>
+                    {(geocodeInfo?.rawData?.display_name) ? (
+                      console.log(geocodeInfo),
+                      <div className="LocationDisplay">
+                        Location: {geocodeInfo.rawData.display_name}
+                      </div>
+                    ): (
+                      <div className="LocationError">
+                        Location not named
+                      </div>
+                    )
+
+                    }
+
                     {/* Route tab content is mostly handled by the routing wrapper below */}
                   </>
                 ) : (
