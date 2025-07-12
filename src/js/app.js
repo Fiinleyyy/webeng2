@@ -18,6 +18,9 @@ import '../css/app.css';
 // Import App Component
 import App from '../components/app.jsx';
 
+// Import Notification Service
+import notificationService from './notificationService.js';
+
 // Init F7 React Plugin
 Framework7.use(Framework7React);
 
@@ -25,22 +28,16 @@ Framework7.use(Framework7React);
 const root = createRoot(document.getElementById('app'));
 root.render(React.createElement(App));
 
-// =============================
-//  Service Worker Registrierung
-// =============================
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then((registration) => {
-        console.log('Service Worker registriert mit Scope:', registration.scope);
-
-        // Optional: sofortige Aktivierung bei Update
-        if (registration.waiting) {
-          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-        }
-      })
-      .catch((error) => {
-        console.error(' Service Worker Registrierung fehlgeschlagen:', error);
-      });
-  });
-}
+// Initialize notifications
+window.addEventListener('load', async () => {
+  // Initialize the notification service
+  const notificationsEnabled = await notificationService.init();
+  
+  if (notificationsEnabled) {
+    // Send welcome notification
+    notificationService.sendWelcomeNotification();
+    console.log('Notifications initialized successfully');
+  } else {
+    console.log('Notifications not available or permission denied');
+  }
+});
