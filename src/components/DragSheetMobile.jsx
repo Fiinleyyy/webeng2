@@ -104,7 +104,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
                 ) : (
                   <>
                     {geocodeInfo?.city ? (
-                      <SearchWikipedia searchTerm={geocodeInfo.city} secondarySearchTerm = {geocodeInfo.county} isSheetOpen={isOpen}/>
+                      <SearchWikipedia searchTerm={geocodeInfo.city} secondarySearchTerm = {geocodeInfo.county}/>
                     ) : (
                       <p>Wikipedia-Artikel wird geladen…</p>
                     )}

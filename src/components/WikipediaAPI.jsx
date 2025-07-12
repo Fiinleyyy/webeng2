@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { WikipediaResult } from "./WikipediaResult";
 import "../css/InfoMessage.css"
 
-function SearchWikipedia({ searchTerm, secondarySearchTerm, isSheetOpen}) {
+function SearchWikipedia({ searchTerm, secondarySearchTerm}) {
     const [wikipediaResults, setWikipediaResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
