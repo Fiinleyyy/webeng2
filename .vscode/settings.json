@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.enable": true,
+  "prettier.requireConfig": true,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/www": true
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always"
+}
