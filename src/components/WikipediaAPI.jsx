@@ -55,17 +55,20 @@ function SearchWikipedia({ searchTerm }) {
     }, [searchTerm]);
 
     return (
-        <section className="wikipedia-results">
-            {wikipediaResults.map((result) => (
-                <WikipediaResult
-                    key={result.pageid}
-                    title={result.title}
-                    snippet={result.snippet}
-                    url={result.url}
-                    loading={loading}
-                />
-            ))}
-        </section>
+        <>
+            <section className="wikipedia-results">
+                {wikipediaResults.map((result) => (
+                    <WikipediaResult
+                        key={result.pageid}
+                        title={result.title}
+                        snippet={result.snippet}
+                        url={result.url}
+                        loading={loading}
+                    />
+                ))}
+            </section>
+        </>
+
     );
 }
 

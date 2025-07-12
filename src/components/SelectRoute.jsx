@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import "../css/SelectRoute.css";
 import { Card, CardContent, List, ListItem } from "framework7-react";
+import { Button, Icon } from 'framework7-react';
+import { InfoMessage } from './InfoMessages';
+
 
 const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoord }) => {
   const [startPoint, setStartPoint] = useState("");
@@ -9,13 +12,22 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
   const [endSuggestions, setEndSuggestions] = useState([]);
   const [startCoords, setStartCoords] = useState(null);
   const [endCoords, setEndCoords] = useState(null);
+  const [startInputValue, setStartInputValue] = useState("");
+  const [startSuggestionsSearched, setStartSuggestionsSearched] = useState(false);
+  const [endInputValue, setEndInputValue] = useState("");
+  const [endSuggestionsSearched, setEndSuggestionsSearched] = useState(false);
 
   // Fetch für Start
   useEffect(() => {
-    if (startPoint.length > 2 && !startCoords) {
+    if (startPoint.length > 0 && !startCoords) {
+      console.log("Fetch triggered")
       fetch(`https://nominatim.openstreetmap.org/search?q=${startPoint}&format=json`)
         .then((res) => res.json())
-        .then((data) => setStartSuggestions(data));
+        .then((data) => {
+          setStartSuggestionsSearched(true);
+          setStartSuggestions(data)
+        }
+        );
     } else {
       setStartSuggestions([]);
     }
@@ -23,10 +35,14 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
 
   // Fetch für Ziel
   useEffect(() => {
-    if (endPoint.length > 2 && !endCoords) {
+    if (endPoint.length > 0 && !endCoords) {
       fetch(`https://nominatim.openstreetmap.org/search?q=${endPoint}&format=json`)
         .then((res) => res.json())
-        .then((data) => setEndSuggestions(data));
+        .then((data) => {
+          setEndSuggestionsSearched(true);
+          setEndSuggestions(data)
+        }
+        );
     } else {
       setEndSuggestions([]);
     }
@@ -41,6 +57,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
 
   // Auswahl Start
   const handleStartSelect = (location) => {
+    setStartSuggestionsSearched(false);
     setStartPoint(location.display_name);
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
     setStartCoords(coords);
@@ -49,6 +66,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
   };
 
   const handleEndSelect = (location) => {
+    setEndSuggestionsSearched(false);
     setEndPoint(location.display_name);
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
     setEndCoords(coords);
@@ -60,20 +78,37 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     <Card className='RoutingCard'>
       <CardContent className='CardContent'>
         <List className='InputList'>
-          <input
-            className='Input'
-            type="text"
-            value={startPoint}
-            placeholder={
-              myLocation?.latitude && myLocation?.longitude
-                ? `${myLocation.latitude.toFixed(5)}, ${myLocation.longitude.toFixed(5)}`
-                : "type in start"
-            }
-            onChange={(e) => {
-              setStartPoint(e.target.value);
-              setStartCoords(null);
-            }}
-          />
+          <div className='InputRow'>
+            <input
+              className='Input'
+              type="text"
+              value={startInputValue}
+              placeholder={
+                myLocation?.latitude && myLocation?.longitude
+                  ? `${myLocation.latitude.toFixed(5)}, ${myLocation.longitude.toFixed(5)}`
+                  : "type in start"
+              }
+              onChange = {(e) => {
+                setStartInputValue(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') {
+                  setStartPoint(startInputValue);
+                  setStartCoords(null);
+                }
+              }}
+              />
+            <Button
+              className='SearchButton'
+              onClick={() => {
+                    setStartPoint(startInputValue);
+                    setStartCoords(null);
+              }}>
+              <Icon f7='search' />
+            </Button>
+
+          </div>
+
           {startSuggestions.length > 0 && (
             <List>
               {startSuggestions.map((location, index) => (
@@ -85,21 +120,43 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
               ))}
             </List>
           )}
+          {startSuggestionsSearched && startSuggestions.length == 0 && (
+            <div className="NoResultsMessage">
+              No results found for the entered location.
+            </div>
+          )}
 
-          <input
-            className='Input'
-            type="text"
-            placeholder={
-              destinationCoord
-                ? `${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`
-                : "type in destination"
-            }
-            value={endPoint}
-            onChange={(e) => {
-              setEndPoint(e.target.value);
-              setEndCoords(null);
-            }}
-          />
+          <div className='InputRow'>
+            <input
+              className='Input'
+              type="text"
+              value={endInputValue}
+              placeholder={
+                destinationCoord
+                  ? `${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`
+                  : "type in destination"
+              }
+              onChange={(e) => {
+                setEndInputValue(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') {
+                  setEndPoint(endInputValue);
+                  setEndCoords(null);
+                }
+              }}
+            />
+            <Button
+              className='SearchButton'
+              onClick={() => {
+                    setEndPoint(endInputValue);
+                    setEndCoords(null);
+              }}>
+              <Icon f7='search' />
+            </Button>
+
+          </div>
+
           {endSuggestions.length > 0 && (
             <List>
               {endSuggestions.map((location, index) => (
@@ -111,6 +168,12 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
               ))}
             </List>
           )}
+          {endSuggestionsSearched && endSuggestions.length == 0 && (
+            <div className="NoResultsMessage">
+              No results found for the entered location.
+            </div>
+          )}
+
         </List>
       </CardContent>
     </Card>

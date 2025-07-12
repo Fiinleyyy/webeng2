@@ -61,3 +61,31 @@
 .SearchLocationButton:hover {
     background-color: #0056b3;
 }
+
+.InputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* margin-bottom: 0.75rem; */
+}
+
+.InputRow .Input {
+  flex: 1;
+  padding: 0.25rem;
+}
+
+.SearchButton {
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.NoResultsMessage {
+  color: #ff3b30; /* red for error */
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
