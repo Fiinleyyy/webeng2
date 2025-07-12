@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { WikipediaResult } from "./WikipediaResult";
 import "../css/InfoMessage.css"
 
-function SearchWikipedia({ searchTerm, isSheetOpen}) {
+function SearchWikipedia({ searchTerm, secondarySearchTerm, isSheetOpen}) {
     const [wikipediaResults, setWikipediaResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ function SearchWikipedia({ searchTerm, isSheetOpen}) {
             return `${baseUrl}?${queryString}`;
         };
 
-        const fetchWikipediaResults = async () => {
+        const fetchWikipediaResults = async (searchTerm) => {
             setLoading(true);
             const url1 = buildUrl(baseUrl, {
                 origin: "*",
@@ -55,15 +55,35 @@ function SearchWikipedia({ searchTerm, isSheetOpen}) {
                 r.url = pages[r.pageid]?.fullurl;
             });
 
-            if (results.length > 0) {
-                setWikipediaResults(results);
-            } else {
-                setWikipediaResults(["Unknown"])
-            }
-            setLoading(false);
+            return results;
         };
 
-        fetchWikipediaResults();
+        const search = async () => {
+            setLoading(true);
+
+            if (!searchTerm || searchTerm === "Unknown") {
+                setWikipediaResults(["Unknown"]);
+                setLoading(false);
+                return;
+            }
+
+            let results = await fetchWikipediaResults(searchTerm);
+
+
+
+            if ((results.length === 0) && secondarySearchTerm && secondarySearchTerm !== "Unknown") {
+                results = await fetchWikipediaResults(secondarySearchTerm);
+            }
+
+            if (results.length === 0) {
+                setWikipediaResults(["Unknown"]);
+            } else {
+                setWikipediaResults(results);
+            }
+
+            setLoading(false);
+        };
+        search();
     }, [searchTerm]);
 
 

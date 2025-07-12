@@ -92,9 +92,8 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
                 {activeTab === 'route' ? (
                   <>
                     {routeInfo ? (
-                      console.log(geocodeInfo),
                       <p>
-                        Distanz: {geocodeInfo.city} km, Zeit: {routeInfo.duration} min
+                        Distanz:  km, Zeit: {routeInfo.duration} min
                         <br />
                         Koordinaten: {routeInfo.destination}
                       </p>
@@ -105,7 +104,7 @@ const DragSheetMobile = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
                 ) : (
                   <>
                     {geocodeInfo?.city ? (
-                      <SearchWikipedia searchTerm={geocodeInfo.city} isSheetOpen={isOpen}/>
+                      <SearchWikipedia searchTerm={geocodeInfo.city} secondarySearchTerm = {geocodeInfo.county} isSheetOpen={isOpen}/>
                     ) : (
                       <p>Wikipedia-Artikel wird geladen…</p>
                     )}
