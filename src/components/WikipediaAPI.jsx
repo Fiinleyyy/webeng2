@@ -103,30 +103,29 @@ function SearchWikipedia({ searchTerm, secondarySearchTerm}) {
     return (
         <>
             <section className="wikipedia-results">
-    {/*Render a list of WikipediaResult components */
-        wikipediaResults.length === 0 ? null : (
-            wikipediaResults.map((result) => {
-                if (result === "Unknown") {
-                    return (
-                        <div className="wikipediaInfoMessage" key="unknown">
-                            No Wikipedia results found for this location.
-                        </div>
-                    );
-                } else {
-                    return (
-                        <WikipediaResult
-                            key={result.pageid}
-                            title={result.title}
-                            snippet={result.snippet}
-                            url={result.url}
-                            loading={loading}
-                        />
-                    );
+                {/*Render a list of WikipediaResult components */
+                    wikipediaResults.length === 0 ? null : (
+                        wikipediaResults.map((result) => {
+                            if (result === "Unknown") {
+                                return (
+                                    <div className="wikipediaInfoMessage" key="unknown">
+                                        No Wikipedia results found for this location.
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <WikipediaResult
+                                        key={result.pageid}
+                                        title={result.title}
+                                        snippet={result.snippet}
+                                        url={result.url}
+                                        loading={loading}
+                                    />
+                                );
+                            }
+                        })
+                    )
                 }
-            })
-        )
-    }
-
             </section>
 
         </>

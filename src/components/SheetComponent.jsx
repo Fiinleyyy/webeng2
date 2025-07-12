@@ -7,7 +7,7 @@ import "../css/SheetComponent.css";
 // A bottom sheet component that shows route info and a Wikipedia tab
 const SheetComponent = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
   const [activeTab, setActiveTab] = useState('route'); // Active tab: 'route' or 'info'
-  
+
   const minimizedHeight = 0; // Height when sheet is closed
   const fullHeight = window.innerHeight * 0.3; // Sheet height when opened (30% of screen)
 
@@ -28,6 +28,7 @@ const SheetComponent = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
   // Close the sheet and reset height
   const onSheetClose = () => {
     setOpen(false);
+    setActiveTab('route');
     setSheetHeight(minimizedHeight);
   };
 
@@ -35,7 +36,7 @@ const SheetComponent = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
     <>
       {/* Bottom sheet component from react-modal-sheet */}
       <Sheet isOpen={true} onClose={onSheetClose} disableDrag={true}>
-        
+
         {/* Main container for the sheet content */}
         <Sheet.Container
           className="SheetContainer"
@@ -74,11 +75,11 @@ const SheetComponent = ({ isOpen, setOpen, routeInfo, geocodeInfo }) => {
                   </>
                 ) : (
                   <>
-                    {/* Show Wikipedia info if geocode city is available */}
-                    {geocodeInfo?.city ? (
-                      <SearchWikipedia searchTerm={geocodeInfo.city} />
+                    {/* Show Wikipedia info if geocode city or county is available */}
+                    {(geocodeInfo?.city || geocodeInfo?.county) ? (
+                      <SearchWikipedia searchTerm={geocodeInfo.city} secondarySearchTerm={geocodeInfo.county}/>
                     ) : (
-                      <p>Loading Wikipedia article…</p>
+                      <p>No city or county found for this location</p>
                     )}
                   </>
                 )}
