@@ -1,8 +1,6 @@
 .leaflet-routing-container {
-  display: block;
-  background-color: white;
-  color: black;
-  font-size: 14px;
-  width: 100vw
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
-

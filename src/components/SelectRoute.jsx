@@ -5,17 +5,18 @@ import { Button, Icon } from 'framework7-react';
 import { InfoMessage } from './InfoMessages';
 
 
+// Component for selecting start and destination using Nominatim (OpenStreetMap)
 const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoord }) => {
-  const [startPoint, setStartPoint] = useState("");
-  const [endPoint, setEndPoint] = useState("");
-  const [startSuggestions, setStartSuggestions] = useState([]);
-  const [endSuggestions, setEndSuggestions] = useState([]);
-  const [startCoords, setStartCoords] = useState(null);
-  const [endCoords, setEndCoords] = useState("Initial");
-  const [startInputValue, setStartInputValue] = useState(startPoint || "");
-  const [startSuggestionsSearched, setStartSuggestionsSearched] = useState(false);
-  const [endInputValue, setEndInputValue] = useState(endPoint || "");
-  const [endSuggestionsSearched, setEndSuggestionsSearched] = useState(false);
+  const [startPoint, setStartPoint] = useState(""); // Text input for start
+  const [endPoint, setEndPoint] = useState("");  // Text input for destination
+  const [startSuggestions, setStartSuggestions] = useState([]); // Autocomplete suggestions for start
+  const [endSuggestions, setEndSuggestions] = useState([]); // Autocomplete suggestions for destination
+  const [startCoords, setStartCoords] = useState(null); // Selected coordinates for start
+  const [endCoords, setEndCoords] = useState("Initial");  // Selected coordinates for destination
+  const [startInputValue, setStartInputValue] = useState(startPoint || ""); // Manual input value for start
+  const [startSuggestionsSearched, setStartSuggestionsSearched] = useState(false); // Tracker whether start value was searched by user
+  const [endInputValue, setEndInputValue] = useState(endPoint || ""); // Manual input value for end
+  const [endSuggestionsSearched, setEndSuggestionsSearched] = useState(false); // Tracker whether end value was searched by user
   // Fetch für Start
   useEffect(() => {
     if (startPoint.length > 0 && !startCoords) {
@@ -40,7 +41,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
   }, [endPoint]);
 
 
-  // Fetch für Ziel
+  // Fetch suggestions for destination input
   useEffect(() => {
     if (endPoint.length > 0 && !endCoords) {
       fetch(`https://nominatim.openstreetmap.org/search?q=${endPoint}&format=json`)
@@ -55,23 +56,24 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     }
   }, [endPoint, endCoords]);
 
-  // Reagiere auf Koordinaten-Updates (z. B. Klick oder Drag)
+  // When coordinates change externally (e.g. from map click), update end input field with fitting coordinates to keep the UI up to date with the searched destination
   useEffect(() => {
     if (destinationCoord) {
       setEndPoint(`${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`);
     }
   }, [destinationCoord]);
 
-  // Auswahl Start
+  // Handle selection of a start location from suggestions
   const handleStartSelect = (location) => {
-    setStartSuggestionsSearched(false);
-    setStartPoint(location.display_name);
+    setStartSuggestionsSearched(false); // Start point suggestions not searched yet
+    setStartPoint(location.display_name); // Fill input with selected address
     const coords = { lat: parseFloat(location.lat), lon: parseFloat(location.lon) };
-    setStartCoords(coords);
-    setStartSuggestions([]);
-    setStart({ name: location.display_name, lat: coords.lat, lon: coords.lon });
+    setStartCoords(coords);               // Save selected coordinates
+    setStartSuggestions([]);             // Clear suggestion list
+    setStart({ name: location.display_name, lat: coords.lat, lon: coords.lon }); // Update parent state
   };
 
+  // Handle selection of a destination from suggestions
   const handleEndSelect = (location) => {
     setEndSuggestionsSearched(false);
     setEndPoint(location.display_name);
@@ -85,8 +87,9 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
     <Card className='RoutingCard'>
       <CardContent className='CardContent'>
         <List className='InputList'>
+          {/* Start point input field */}
           <div className='InputRow'>
-            <input
+          <input
               className='Input'
               type="text"
               value={startInputValue}
@@ -122,7 +125,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
               onKeyDown={(e) => {
                 if (e.key == 'Enter') {
                   setStartPoint(startInputValue);
-                  setStartCoords(null);
+                  setStartCoords(null); // Reset selected coords to allow new search
                 }
               }}
               />
@@ -137,6 +140,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
 
           </div>
 
+          {/* Start location suggestions */}
           {startSuggestions.length > 0 && (
             <List>
               {startSuggestions.map((location, index) => (
@@ -155,7 +159,8 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
           )}
 
           <div className='InputRow'>
-            <input
+          {/* Destination input field */}
+          <input
               className='Input'
               type="text"
               value={endInputValue}
@@ -170,7 +175,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
               onKeyDown={(e) => {
                 if (e.key == 'Enter') {
                   setEndPoint(endInputValue);
-                  setEndCoords(null);
+                  setEndCoords(null); // Reset selected coords to allow new search
                 }
               }}
             />
@@ -185,6 +190,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
 
           </div>
 
+          {/* Destination location suggestions */}
           {endSuggestions.length > 0 && (
             <List>
               {endSuggestions.map((location, index) => (

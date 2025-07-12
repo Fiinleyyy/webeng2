@@ -1,40 +1,30 @@
+import React from 'react';
+import DOMPurify from "dompurify"; // Library to sanitize potentially unsafe HTML
+import Skeleton from "react-loading-skeleton"; // UI component for loading placeholders
+import 'react-loading-skeleton/dist/skeleton.css'; // Styles for Skeleton
 
-import DOMPurify from "dompurify";
-import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css'
-
+// Component to display a single Wikipedia search result
 function WikipediaResult(props) {
+    // Sanitize the HTML snippet returned from Wikipedia to prevent XSS
     let safeHTMLSnippet = DOMPurify.sanitize(props.snippet);
+
     return (
         <div>
-            <h2><a href={props.url}>{props.loading ? <Skeleton/> : props.title}</a></h2>
+            {/* Title with clickable link. If loading, show a skeleton instead */}
+            <h2>
+                <a href={props.url}>
+                    {props.loading ? <Skeleton /> : props.title}
+                </a>
+            </h2>
+
+            {/* Show loading skeleton or the sanitized Wikipedia snippet */}
             {props.loading ? (
-                <Skeleton count={3} />
+                <Skeleton count={3} /> // 3 lines of placeholder text
             ) : (
-                <p dangerouslySetInnerHTML={{__html: safeHTMLSnippet}}></p>
+                <p dangerouslySetInnerHTML={{ __html: safeHTMLSnippet }}></p> // Render cleaned HTML
             )}
         </div>
-    )
+    );
 }
-// function WikipediaResult(props) {
-//     let safeHTMLSnippet = DOMPurify.sanitize(props.snippet);
 
-//     return (
-//         <div>
-//             <h2>
-//                 <a href={props.url}>
-//                     {props.loading ? <Skeleton width={200} /> : props.title}
-//                 </a>
-//             </h2>
-
-//             {props.loading ? (
-//                 <Skeleton count={3} />
-//             ) : (
-//                 <p dangerouslySetInnerHTML={{ __html: safeHTMLSnippet }}></p>
-//             )}
-//         </div>
-//     );
-// }
-
-
-export {WikipediaResult};
+export { WikipediaResult };
