@@ -18,9 +18,26 @@ import '../css/app.css';
 // Import App Component
 import App from '../components/app.jsx';
 
+// Import Notification Service
+import notificationService from './notificationService.js';
+
 // Init F7 React Plugin
-Framework7.use(Framework7React)
+Framework7.use(Framework7React);
 
 // Mount React App
 const root = createRoot(document.getElementById('app'));
 root.render(React.createElement(App));
+
+// Initialize notifications
+window.addEventListener('load', async () => {
+  // Initialize the notification service
+  const notificationsEnabled = await notificationService.init();
+  
+  if (notificationsEnabled) {
+    // Send welcome notification
+    notificationService.sendWelcomeNotification();
+    console.log('Notifications initialized successfully');
+  } else {
+    console.log('Notifications not available or permission denied');
+  }
+});
