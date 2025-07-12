@@ -11,16 +11,14 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
   const [startSuggestions, setStartSuggestions] = useState([]);
   const [endSuggestions, setEndSuggestions] = useState([]);
   const [startCoords, setStartCoords] = useState(null);
-  const [endCoords, setEndCoords] = useState(null);
-  const [startInputValue, setStartInputValue] = useState("");
+  const [endCoords, setEndCoords] = useState("Initial");
+  const [startInputValue, setStartInputValue] = useState(startPoint || "");
   const [startSuggestionsSearched, setStartSuggestionsSearched] = useState(false);
-  const [endInputValue, setEndInputValue] = useState("");
+  const [endInputValue, setEndInputValue] = useState(endPoint || "");
   const [endSuggestionsSearched, setEndSuggestionsSearched] = useState(false);
-
   // Fetch für Start
   useEffect(() => {
     if (startPoint.length > 0 && !startCoords) {
-      console.log("Fetch triggered")
       fetch(`https://nominatim.openstreetmap.org/search?q=${startPoint}&format=json`)
         .then((res) => res.json())
         .then((data) => {
@@ -32,6 +30,15 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
       setStartSuggestions([]);
     }
   }, [startPoint, startCoords]);
+
+  useEffect(() => {
+    setStartInputValue(startPoint || "");
+  }, [startPoint]);
+
+  useEffect(() => {
+    setEndInputValue(endPoint || "");
+  }, [endPoint]);
+
 
   // Fetch für Ziel
   useEffect(() => {
@@ -88,9 +95,30 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
                   ? `${myLocation.latitude.toFixed(5)}, ${myLocation.longitude.toFixed(5)}`
                   : "type in start"
               }
-              onChange = {(e) => {
-                setStartInputValue(e.target.value);
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                setStartInputValue(inputValue);
+
+                if (inputValue.trim() === "" && myLocation?.latitude && myLocation?.longitude) {
+                  const locationString = `${myLocation.latitude.toFixed(5)}, ${myLocation.longitude.toFixed(5)}`;
+                  setStartPoint(locationString);
+                  setStartCoords({
+                    lat: myLocation.latitude,
+                    lon: myLocation.longitude,
+                  });
+                  setStart({
+                    name: "My Location",
+                    lat: myLocation.latitude,
+                    lon: myLocation.longitude,
+                  });
+                  setStartSuggestions([]);
+                } else if (inputValue.trim() === "") {
+                  setStartPoint("");
+                  setStartCoords(null);
+                  setStartSuggestions([]);
+                }
               }}
+
               onKeyDown={(e) => {
                 if (e.key == 'Enter') {
                   setStartPoint(startInputValue);

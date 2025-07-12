@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { WikipediaResult } from "./WikipediaResult";
+import "../css/InfoMessage.css"
 
-function SearchWikipedia({ searchTerm }) {
+function SearchWikipedia({ searchTerm, isSheetOpen}) {
     const [wikipediaResults, setWikipediaResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
+
     useEffect(() => {
-        if (!searchTerm) return;
+        setLoading(true);
+        console.log("Searching")
+        if (!searchTerm|| searchTerm === "Unknown") {
+            setWikipediaResults(["Unknown"]);
+            return;
+        }
 
         const baseUrl = "https://en.wikipedia.org/w/api.php";
         const buildUrl = (baseUrl, searchParams) => {
@@ -43,30 +50,53 @@ function SearchWikipedia({ searchTerm }) {
             const data2 = await response2.json();
             const pages = data2.query?.pages ?? {};
 
+
             results.forEach(r => {
                 r.url = pages[r.pageid]?.fullurl;
             });
 
-            setWikipediaResults(results);
+            if (results.length > 0) {
+                setWikipediaResults(results);
+            } else {
+                setWikipediaResults(["Unknown"])
+            }
             setLoading(false);
         };
 
         fetchWikipediaResults();
     }, [searchTerm]);
 
+
+
     return (
         <>
             <section className="wikipedia-results">
-                {wikipediaResults.map((result) => (
-                    <WikipediaResult
-                        key={result.pageid}
-                        title={result.title}
-                        snippet={result.snippet}
-                        url={result.url}
-                        loading={loading}
-                    />
-                ))}
+    {
+        wikipediaResults.length === 0 ? null : (
+            wikipediaResults.map((result) => {
+                if (result === "Unknown") {
+                    return (
+                        <div className="wikipediaInfoMessage" key="unknown">
+                            No Wikipedia results found for this location.
+                        </div>
+                    );
+                } else {
+                    return (
+                        <WikipediaResult
+                            key={result.pageid}
+                            title={result.title}
+                            snippet={result.snippet}
+                            url={result.url}
+                            loading={loading}
+                        />
+                    );
+                }
+            })
+        )
+    }
+
             </section>
+
         </>
 
     );

@@ -25,3 +25,11 @@
     max-width: 40vw;
   }
 }
+
+.wikipediaInfoMessage {
+  color: #ff3b30; /* Red color */
+  text-align: center;
+  font-size: 16px;
+  padding: 1rem;
+  font-weight: bold;
+}
