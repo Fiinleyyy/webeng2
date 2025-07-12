@@ -5,8 +5,6 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-    volumes:
-      - ..:/app:cached
     ports:
       - "4173:4173"
-    command: /bin/sh -c "npm run build && npx vite preview --host 0.0.0.0 --port 4173 --outDir www --config ./vite.config.http.js"
+    command: npx vite preview --host 0.0.0.0 --port 4173 --config vite.config.http.js

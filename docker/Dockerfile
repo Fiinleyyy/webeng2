@@ -17,4 +17,4 @@ RUN npm run build
 EXPOSE 4173
 
 # Start the Vite preview server
-CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "4173", "--outDir", "www"]
+CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "4173", "--config", "vite.config.http.js"]

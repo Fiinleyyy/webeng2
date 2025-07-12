@@ -1,13 +1,19 @@
 // vite.config.http.js
+import { build } from 'vite';
 import { sharedConfig } from './vite.config.js';
 
 export default {
   ...sharedConfig,
+  root: 'www',
+  build: {
+    ...sharedConfig.build,
+    outDir: 'dist',
+  },
   server: {
     ...sharedConfig.server,
     https: false,
     host: true,
-    port: 5174,
+    port: 4174,
     open: false,
   },
 };
