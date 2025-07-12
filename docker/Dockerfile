@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # Expose dev server port
-EXPOSE 4173
+EXPOSE 5174
 
 # Start the Vite preview server
 CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "4173", "--outDir", "www"]
