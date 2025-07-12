@@ -1,6 +1,6 @@
 {
   "name": "webeng2",
-  "type": "module",
+  "type": "commonjs",
   "private": true,
   "version": "1.0.0",
   "description": "WebEng2",
