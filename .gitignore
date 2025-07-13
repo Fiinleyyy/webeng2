@@ -39,3 +39,7 @@ Thumbs.db
 
 # Production build
 www/
+src/dist/
+
+public/service-worker.js
+public/service-worker.js.map

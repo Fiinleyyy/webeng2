@@ -6,7 +6,15 @@ import "../css/Style.css";
 
 // Routing component using Leaflet Routing Machine.
 // Handles routing between a provided start & destination or via map interaction.
-const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDestinationCoord }) => {
+const Routing = ({
+  setOpen,
+  setRouteInfo,
+  myLocation,
+  start,
+  destination,
+  setDestinationCoord,
+  setDestination
+}) => {
   const map = useMap();
   const routingControlRef = useRef(null);
   const startMarkerRef = useRef(null);
@@ -93,6 +101,19 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       const newDest = e.waypoints[1]?.latLng;
       if (newDest) {
         setDestinationCoord(newDest);
+        // Keep destination state in sync if waypoints are changed manually
+        if (setDestination) {
+          setDestination(prev => {
+            if (
+              !prev ||
+              prev.lat.toFixed(5) !== newDest.lat.toFixed(5) ||
+              prev.lon.toFixed(5) !== newDest.lng.toFixed(5)
+            ) {
+              return { lat: newDest.lat, lon: newDest.lng };
+            }
+            return prev;
+          });
+        }
       }
     });
 
@@ -102,6 +123,11 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
       setOpen(true);
       setDestinationCoord(endLatLng);
+
+      // This triggers the URL update logic in MapComponent
+      if (setDestination) {
+        setDestination({ lat: endLatLng.lat, lon: endLatLng.lng });
+      }
     };
 
     map.on('click', handleClick);
@@ -119,7 +145,7 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
         startMarkerRef.current = null;
       }
     };
-  }, [map, myLocation, start, setOpen, setRouteInfo, setDestinationCoord]);
+  }, [map, myLocation, start, setOpen, setRouteInfo, setDestinationCoord, setDestination]);
 
   // Watch for updates from external inputs (e.g. input fields)
   useEffect(() => {
@@ -144,7 +170,6 @@ const Routing = ({ setOpen, setRouteInfo, myLocation, start, destination, setDes
       routingControlRef.current.setWaypoints([startLatLng, endLatLng]);
     }
   }, [destination, start, myLocation, setOpen]);
-
 
   return null;
 };
