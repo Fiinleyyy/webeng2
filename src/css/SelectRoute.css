@@ -1,0 +1,91 @@
+.RoutingCard {
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    background-color: white;
+    padding: 12px;
+    width: 20%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    min-width: 150px;
+    max-width: 400px;
+}
+
+.CardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.InputList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.Input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #007bff; /* Blaue Umrandung */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sanfter Schatten */
+    background-color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.Input:focus {
+    border-color: #0056b3;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    outline: none; /* Entfernt den Standard-Fokus-Rahmen */
+}
+
+.InputList,
+.ListInput {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.SearchLocationButton {
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    top: 20px;
+    right: 0px;
+}
+
+.SearchLocationButton:hover {
+    background-color: #0056b3;
+}
+
+.InputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* margin-bottom: 0.75rem; */
+}
+
+.InputRow .Input {
+  flex: 1;
+  padding: 0.25rem;
+}
+
+.SearchButton {
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.NoResultsMessage {
+  color: #ff3b30; /* red for error */
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}

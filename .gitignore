@@ -34,10 +34,12 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# IDEs and editors
-.vscode/
 
 
 
 # Production build
 www/
+src/dist/
+
+public/service-worker.js
+public/service-worker.js.map
