@@ -36,9 +36,12 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
   // When coordinates change externally (e.g. from map click), update end input field with fitting coordinates to keep the UI up to date with the searched destination
   useEffect(() => {
     if (destinationCoord) {
-      setEndPoint(`${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`);
+      const formatted = `${destinationCoord.lat.toFixed(5)}, ${destinationCoord.lng.toFixed(5)}`;
+      if (formatted !== endPoint) {
+        setEndPoint(formatted);
+      }
     }
-  }, [destinationCoord]);
+  }, [destinationCoord, endPoint]);
 
   // Handle selection of a start location from suggestions
   const handleStartSelect = (location) => {
@@ -74,7 +77,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
             }
             onChange={(e) => {
               setStartPoint(e.target.value);
-              setStartCoords(null); // Reset selected coords to allow new search
+              setStartCoords(null);
             }}
           />
           {/* Start location suggestions */}
@@ -102,7 +105,7 @@ const NominatemRouting = ({ setDestination, setStart, myLocation, destinationCoo
             value={endPoint}
             onChange={(e) => {
               setEndPoint(e.target.value);
-              setEndCoords(null); // Reset selected coords to allow new search
+              setEndCoords(null);
             }}
           />
           {/* Destination location suggestions */}

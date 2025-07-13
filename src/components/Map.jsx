@@ -6,36 +6,99 @@ import SheetComponent from './SheetComponent';
 import GetGeoLocation from './GetGeoLocation';
 import NominatemRouting from './SelectRoute';
 import { useReverseGeocodeOnRouteInfo } from './ReverseGeocoding';
-
-// Main component where all PWA parts come together
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const MapComponent = () => {
-  // This state stores information whether the drawer is open or should be opened or closed
   const [isOpen, setOpen] = useState(false);
 
-  // This starte stores information abour the users current location
   const [myLocation, setMyLocation] = useState({
     latitude: null,
     longitude: null,
     error: null
   });
 
-  // This state stores Information about the destination
   const [destination, setDestination] = useState(null);
-
-  // This state stores Information about the start point of a route if it's not the users current position
   const [start, setStart] = useState(null);
-
-  // This state stores information about the calculated route between two points (like distance and time)
   const [routeInfo, setRouteInfo] = useState(null);
-
-  // reverse Geocoding is performed
-  const geocodeInfo = useReverseGeocodeOnRouteInfo(routeInfo);
-
-  // This State stores the coordinates of the destination to display them in the destination input field of tge SelectRoute.jsx
   const [destinationCoord, setDestinationCoord] = useState(null);
 
-  // The following code snippet combines all components so a modular structure is given. A deeper description of the single components can be found in the according files
+  const geocodeInfo = useReverseGeocodeOnRouteInfo(routeInfo);
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // ──────────────────────────────────────────────────────────────
+  // A) Read start and end coordinates from URL on app load
+  // ──────────────────────────────────────────────────────────────
+  useEffect(() => {
+    const startParam = searchParams.get('start');
+    const endParam = searchParams.get('end');
+
+    if (startParam) {
+      const [lat, lon] = startParam.split(',').map(Number);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        setStart({ lat, lon });
+      }
+    }
+
+    if (endParam) {
+      const [lat, lon] = endParam.split(',').map(Number);
+      if (!isNaN(lat) && !isNaN(lon)) {
+        setDestination({ lat, lon });
+      }
+    }
+  }, []);
+
+  // ──────────────────────────────────────────────────────────────
+  // B) Fallback: use current location if start is not set
+  // ──────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (
+      !start &&
+      myLocation.latitude &&
+      myLocation.longitude
+    ) {
+      setStart(prev => {
+        const currentLat = myLocation.latitude.toFixed(5);
+        const currentLon = myLocation.longitude.toFixed(5);
+        if (
+          !prev ||
+          prev.lat.toFixed(5) !== currentLat ||
+          prev.lon.toFixed(5) !== currentLon
+        ) {
+          return {
+            lat: myLocation.latitude,
+            lon: myLocation.longitude,
+            name: "My Location"
+          };
+        }
+        return prev;
+      });
+    }
+  }, [start, myLocation.latitude, myLocation.longitude]);
+
+  // ──────────────────────────────────────────────────────────────
+  // C) Update URL when start and destination change
+  // ──────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (start && destination) {
+      const startStr = `${start.lat.toFixed(5)},${start.lon.toFixed(5)}`;
+      const endStr = `${destination.lat.toFixed(5)},${destination.lon.toFixed(5)}`;
+
+      const currentParams = new URLSearchParams(window.location.search);
+      if (
+        currentParams.get('start') !== startStr ||
+        currentParams.get('end') !== endStr
+      ) {
+        console.log("Updating URL to:", startStr, endStr);
+        navigate(`/?start=${startStr}&end=${endStr}`, { replace: true });
+      }
+    }
+  }, [start, destination, navigate]);
+
+  // ──────────────────────────────────────────────────────────────
+  // D) Component rendering
+  // ──────────────────────────────────────────────────────────────
   return (
     <>
       <NominatemRouting
@@ -44,13 +107,16 @@ const MapComponent = () => {
         setStart={setStart}
         destinationCoord={destinationCoord}
       />
+
       <GetGeoLocation setMyLocation={setMyLocation} />
+
       <SheetComponent
         isOpen={isOpen}
         setOpen={setOpen}
         routeInfo={routeInfo}
         geocodeInfo={geocodeInfo}
       />
+
       <MapContainer
         center={[47, 9]}
         zoom={10}
@@ -61,6 +127,7 @@ const MapComponent = () => {
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
         <Routing
           setOpen={setOpen}
           setRouteInfo={setRouteInfo}
@@ -68,6 +135,7 @@ const MapComponent = () => {
           destination={destination}
           start={start}
           setDestinationCoord={setDestinationCoord}
+          setDestination={setDestination}
         />
       </MapContainer>
     </>

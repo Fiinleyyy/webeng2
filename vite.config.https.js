@@ -1,6 +1,7 @@
 // vite.config.https.js
 import mkcert from 'vite-plugin-mkcert';
 import { sharedConfig } from './vite.config.js';
+import { base } from 'motion/react-client';
 
 export default {
   ...sharedConfig,
@@ -17,4 +18,5 @@ export default {
     port: 4173,
     open: false,
   },
+  base: '/',
 };

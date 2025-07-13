@@ -1,6 +1,7 @@
 // vite.config.http.js
 import { build } from 'vite';
 import { sharedConfig } from './vite.config.js';
+import { base } from 'motion/react-client';
 
 export default {
   ...sharedConfig,
@@ -16,5 +17,6 @@ export default {
     port: 4174,
     open: false,
   },
+  base: '/',
 };
  
