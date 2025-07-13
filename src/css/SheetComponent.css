@@ -1,0 +1,112 @@
+.SheetContainer {
+  width: 100%;
+  transition: height 0.3s ease;
+  overflow: hidden;
+  border-top: 1px solid #ccc;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+}
+
+.SheetHeader {
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.CloseButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.SheetContent {
+  overflow-y: auto;
+  padding: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ButtonWrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.RouteButton,
+.InfoButton {
+  background-color: blue;
+  border: none;
+  border-radius: 1000px;
+  width: 50%;
+  min-height: 25px;
+  color: white;
+  font-weight: bold;
+}
+
+.SmallScreenLayout {
+  display: block;
+}
+
+.LargeScreenLayout {
+  display: none;
+}
+
+.shared-layout-padding {
+  padding: 1rem;
+}
+
+.routing-visible {
+  display: block;
+  height: 300px;
+  width: 100%;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.routing-hidden {
+  display: none;
+}
+
+.Button_Opening_Sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #eee;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  z-index: 1001;
+  user-select: none;
+  font-weight: bold;
+}
+
+.LocationDisplay {
+  font-size: 16px;
+  color: #333;
+  padding: 8px 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.LocationError {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+  padding: 8px 12px;
+  margin: 10px 0;
+}
+

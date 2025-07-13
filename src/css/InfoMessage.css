@@ -1,0 +1,35 @@
+.toast.InfoMessage {
+  font-size: 16px;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: #e90000d9; /* black with 85% opacity */
+}
+
+@media (min-width: 768px) {
+  .toast.InfoMessage {
+    font-size: 22px;
+    padding: 20px 28px;
+    max-width: 60vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  .toast.InfoMessage {
+    font-size: 26px;
+    padding: 20px 28px;
+    max-width: 40vw;
+  }
+}
+
+.wikipediaInfoMessage {
+  color: #ff3b30; /* Red color */
+  text-align: center;
+  font-size: 16px;
+  padding: 1rem;
+  font-weight: bold;
+}

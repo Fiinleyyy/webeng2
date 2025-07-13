@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  webapp:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "4173:4173"
+    command: npx vite preview --host 0.0.0.0 --port 4173 --config vite.config.http.js
