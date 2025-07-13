@@ -33,6 +33,13 @@ A **React + Framework7** Progressive Web App (PWA) built using **Vite** as the b
 
 ---
 
+
+## Generelles Setup
+
+```bash
+git clone https://github.com/Fiinleyyy/webeng2.git
+```
+
 ## 🐳 Docker Setup & Development Workflow
 
 ### ▶️ Run with Docker Compose
@@ -44,31 +51,90 @@ docker-compose up --build
 
 This builds the container and starts the Vite preview server. Open `http://localhost:4173` in your browser to view the app.
 
----
+The application is normally being hosted via http but can also be changed to https by performing following changes:
+1. Reset the cache of your browser to avoid conflicts: Safari -> Developer -> Emtpy Cache 
+2. go to docker/Dockerfile: change `CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "4173", "--config", "vite.config.http.js"]` with `CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "4173", "--config", "vite.config.https.js"]`
+3. got to docker/docker-compose.yaml: change ` npx vite preview --host 0.0.0.0 --port 4173 --config vite.config.http.js` with ` npx vite preview --host 0.0.0.0 --port 4173 --config vite.config.https.js`
+4. run the command to build and run the container either with http or https
 
-## 🧠 Using VSCode with Docker (Devcontainer)
+## 📜 Available Scripts besided docker compose
 
-Development should be done **exclusively using the Devcontainer setup in VSCode**, which ensures proper environment configuration, Git integration, and live reload functionality.
+| Script              | Description                                        |
+|---------------------|----------------------------------------------------|
+| `npm start  `       | Start the development server using http            |
+| `npm run dev:https` | Start the development servier using https          |
+| `npm run build`     | Build the app for production                       |
+| `npm run lint`      | Run ESLint on the project source files             |
 
-Steps:
 
-1. Ensure you have the **Remote - Containers** extension installed in VSCode.
-2. Open the project folder in VSCode.
-3. Open the Command Palette: `Ctrl+Shift+P` → `Dev Containers: Reopen in Container`.
-4. VSCode will use the `.devcontainer/devcontainer.json` file to:
-    - Use the Docker Compose-based container
-    - Mount your local project directory into the container
-    - Forward port `4173` & `5173`
-    - Install Node dependencies via `npm install`
-    - Enable ESLint and GitHub CLI support
+## Run Project with development server 
 
-Once inside the container, simply run:
+run following steps to execute project in development server via http or https
 
 ```bash
-npm run dev
+npm install
+npm run build
+npm start (for http)
+npm run dev:https (for https)
+docker-compose up --build
 ```
 
-The app will be served with hot reload at `http://localhost:5173`.
+---
+
+# Scrum 
+
+The Scrum tickets, poker planning and the Scrum Board can be found in the Github Projects.
+
+---
+
+# PWA Criteria
+
+## Progressive 
+
+The PWA is working on Edge, Chrome, Firefox and Safari
+
+## Responsive
+
+The PWA is responsive adpating to the screen size smoothly without any overheads
+
+## Connectivity Indipendent
+
+The PWA is not completely connectivity independent due to the use of multiple API's like the wikipedia API, Nominatim API for geocoding and reverse geocoding and the OpenStreetMap API. 
+The service worker tries to cache the Map and the nominatim results. This allows fast connection even if there is low internet power and even allows to look on the Map and get the users position if there is no internet connection.
+
+## App-like
+
+The PWA acts like a native application adapting perfectly to phone or ipad size as well.
+
+## Fresh
+
+The offline copy of the PWA updates when changes in the online version are made due to the service worker. 
+
+This is only testable outside the docker container because changing parts of the code and rebuilding the container requires a reset of the Browser Cache as well to reload the application running on a certain port. By resetting this cache the service worker cache is also resetted. Due to the fact that the offline copy is updated by changes recognized by the service worker, a reset of its cache will make an update of the desktop shortcut not possible.
+
+## Safe
+
+The PWA is routed on HTTPS. Therefor a personalized ssl certificate is being used. Without that, the application wouldn't be running on IOS because IOS blocks the call of HTTP websites completely.
+
+## Dicoverable
+
+fullfilled
+
+## Reengageable
+
+the application sends a push message every morning at 7 am and every time the application is started. This feature is currently not compatible with Safari, as the browser imposes stricter restrictions on access to certain system-level resources. User interaction is required to grant access to the system-level resources necessary for sending push messages. On Chrome for example this is not required.
+
+## Installable 
+
+A desktop shortcut can be created
+
+## Linkable
+
+Done
+
+## Sensorik
+
+The PWA uses access on native interface. In the case of this PWA it uses GPS to get the users current position and asks the user to allow getting push-messages.
 
 ---
 
@@ -93,17 +159,6 @@ This app was scaffolded using the Framework7 CLI with the following configuratio
   "customBuild": false
 }
 ```
-
----
-
-
-## 📜 Available Scripts
-
-| Script         | Description                                        |
-|----------------|----------------------------------------------------|
-| `npm run dev`  | Start the development server with hot reload       |
-| `npm run build`| Build the app for production                       |
-| `npm run lint` | Run ESLint on the project source files             |
 
 ---
 
@@ -147,7 +202,8 @@ framework7 assets --ui
 - `public/` — Static files
 - `assets-src/` — Editable source assets
 - `workbox-config.js` — Service worker configuration
-- `vite.config.js` — Vite config
+- `vite.config.http.js` — Vite config for http
+- `vite.config.https.js` - Vite config for https
 - `docker/` — Dockerfile and Compose setup
 - `.devcontainer/` — Devcontainer configuration for VSCode
 
@@ -162,53 +218,3 @@ framework7 assets --ui
 - [Community Forum](https://forum.framework7.io)
 
 ---
-
-# PWA Criteria
-
-## Progressive 
-
-The PWA is working on Edge, Chrome, Firefox and Safari
-
-## Responsive
-
-The PWA is responsive adpating to the screen size smoothly without any overheads
-
-## Connectivity Indipendent
-
-The PWA is not completely connectivity independent due to the use of multiple API's like the wikipedia API, Nominatim API for geocoding and reverse geocoding and the OpenStreetMap API. 
-The service worker tries to cache the Map and the nominatim results. This allows fast connection even if there is low internet power and even allows to look on the Map and get the users position of there is no internet connection.
-
-## App-like
-
-The PWA acts like a native application adapting perfectly to phone or ipad size as well.
-
-## Fresh
-
-The offline copy of the PWA updates when changes in the online version are made due to the service worker
-
-## Safe
-
-The PWA is routed on HTTPS. Therefor a personalized ssl certificate is being used. Without that, the application wouldn't be running on IOS because IOS blocks the call of HTTP websites completely.
-
-## Dicoverable
-
-fullfilled
-
-## Reengageable
-
-not yet fullfilled
-
-## Installable 
-
-Chrone:
-Firefox:
-Edge:
-Safari:
-
-## Linkable
-
-not yet
-
-## Sensorik
-
-The PWA uses access on native interface. In the case of this PWA it uses GPS to get the users current position
