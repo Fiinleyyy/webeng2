@@ -89,3 +89,24 @@
   user-select: none;
   font-weight: bold;
 }
+
+.LocationDisplay {
+  font-size: 16px;
+  color: #333;
+  padding: 8px 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.LocationError {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+  padding: 8px 12px;
+  margin: 10px 0;
+}
+

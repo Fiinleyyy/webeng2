@@ -1,15 +1,22 @@
 import React from 'react';
 import { useEffect, useState } from "react";
 import { WikipediaResult } from "./WikipediaResult";
+import "../css/InfoMessage.css"
 
 // Component to search Wikipedia using the MediaWiki API
-function SearchWikipedia({ searchTerm }) {
+function SearchWikipedia({ searchTerm, secondarySearchTerm}) {
     const [wikipediaResults, setWikipediaResults] = useState([]); // Search result list
     const [loading, setLoading] = useState(false); // Loading state
 
+
     useEffect(() => {
         // Exit if no search term is provided
-        if (!searchTerm) return;
+        setLoading(true);
+        console.log("Searching")
+        if (!searchTerm|| searchTerm === "Unknown") {
+            setWikipediaResults(["Unknown"]);
+            return;
+        }
 
         const baseUrl = "https://en.wikipedia.org/w/api.php";
 
@@ -20,7 +27,7 @@ function SearchWikipedia({ searchTerm }) {
         };
 
         // Fetch Wikipedia search results and resolve page URLs
-        const fetchWikipediaResults = async () => {
+        const fetchWikipediaResults = async (searchTerm) => {
             setLoading(true); // Start loading
 
             // First request: search for page titles matching the term
@@ -54,31 +61,75 @@ function SearchWikipedia({ searchTerm }) {
             const data2 = await response2.json();
             const pages = data2.query?.pages ?? {};
 
+
             // Attach full URL to each result
             results.forEach(r => {
                 r.url = pages[r.pageid]?.fullurl;
             });
 
-            setWikipediaResults(results); // Save final result list
-            setLoading(false);            // Stop loading
+            return results;
         };
 
-        fetchWikipediaResults(); // Trigger fetch
+        const search = async () => {
+            setLoading(true);
+
+            if (!searchTerm || searchTerm === "Unknown") {
+                setWikipediaResults(["Unknown"]);
+                setLoading(false);
+                return;
+            }
+
+            let results = await fetchWikipediaResults(searchTerm);
+
+
+
+            if ((results.length === 0) && secondarySearchTerm && secondarySearchTerm !== "Unknown") {
+                results = await fetchWikipediaResults(secondarySearchTerm);
+            }
+
+            if (results.length === 0) {
+                setWikipediaResults(["Unknown"]);
+            } else {
+                setWikipediaResults(results); //Save final result list
+            }
+
+            setLoading(false); // Stop loading
+        };
+        search(); // Execute search for a primary and a secondary search term
     }, [searchTerm]); // Run effect when searchTerm changes
 
+
+
     return (
-        <section className="wikipedia-results">
-            {/* Render a list of WikipediaResult components */}
-            {wikipediaResults.map((result) => (
-                <WikipediaResult
-                    key={result.pageid}
-                    title={result.title}
-                    snippet={result.snippet}
-                    url={result.url}
-                    loading={loading}
-                />
-            ))}
-        </section>
+        <>
+            <section className="wikipedia-results">
+                {/*Render a list of WikipediaResult components */
+                    wikipediaResults.length === 0 ? null : (
+                        wikipediaResults.map((result) => {
+                            if (result === "Unknown") {
+                                return (
+                                    <div className="wikipediaInfoMessage" key="unknown">
+                                        No Wikipedia results found for this location.
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <WikipediaResult
+                                        key={result.pageid}
+                                        title={result.title}
+                                        snippet={result.snippet}
+                                        url={result.url}
+                                        loading={loading}
+                                    />
+                                );
+                            }
+                        })
+                    )
+                }
+            </section>
+
+        </>
+
     );
 }
 
