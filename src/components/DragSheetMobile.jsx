@@ -7,7 +7,7 @@ const DragSheetMobile = ({ isOpen, setOpen }) => {
       <Sheet.Container style={{ height: "50vh" }}>
         <Sheet.Header />
         <Sheet.Content>
-    
+
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop />

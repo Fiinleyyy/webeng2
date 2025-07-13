@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { InfoMessage } from './InfoMessages';
+import React from 'react';
 
 // In this file the Geolocation of the users current positition using the Geolocation API.
 // Result which either is (latitude, longitude, or error) is passed to setMyLocation
 
 const GetGeoLocation = ({setMyLocation}) => {
+    const [locationError, setLocationError] = useState(null);
+
     useEffect(() => {
         // this gathers the users current position after getting his confirmation that the PWA is allowed to access it
         if (navigator.geolocation) {
@@ -23,18 +27,21 @@ const GetGeoLocation = ({setMyLocation}) => {
                     longitude: null,
                     error: error.message,
                   });
+                  setLocationError(error.message);
                 }
               );
             } else {
+              const errorMessage = 'Geolocation is not supported by this browser.';
               setMyLocation({
                 latitude: null,
                 longitude: null,
-                error: 'Geolocation is not supported by this browser.',
+                error: errorMessage,
               });
+              setLocationError(errorMessage);
             };
 
     },[setMyLocation])
-    return null;
+    return locationError ? <InfoMessage message={locationError}/> : null;
 }
 
 export default GetGeoLocation;
