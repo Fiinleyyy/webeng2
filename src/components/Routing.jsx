@@ -2,8 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { useMap } from 'react-leaflet';
 import 'leaflet-routing-machine';
+import 'leaflet/dist/leaflet.css';
 import "../css/Style.css";
 
+// Fix for missing Leaflet markers in container builds (e.g. Docker)
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerRetina from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Ensure Leaflet uses bundled images instead of broken default URLs
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerRetina,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 // Routing component using Leaflet Routing Machine.
 // Handles routing between a provided start & destination or via map interaction.
 const Routing = ({
