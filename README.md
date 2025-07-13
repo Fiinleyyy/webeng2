@@ -34,7 +34,7 @@ A **React + Framework7** Progressive Web App (PWA) built using **Vite** as the b
 ---
 
 
-## Generelles Setup
+## General Setup
 
 ```bash
 git clone https://github.com/Fiinleyyy/webeng2.git
@@ -61,13 +61,13 @@ The application is normally being hosted via http but can also be changed to htt
 
 | Script              | Description                                        |
 |---------------------|----------------------------------------------------|
-| `npm start  `       | Start the development server using http            |
-| `npm run dev:https` | Start the development servier using https          |
+| `npm start  `       | Start the preview servee using http            |
+| `npm run dev:https` | Start the preview server using https          |
 | `npm run build`     | Build the app for production                       |
 | `npm run lint`      | Run ESLint on the project source files             |
 
 
-## Run Project with development server 
+## Run Project with preview server 
 
 run following steps to execute project in development server via http or https
 
@@ -76,7 +76,6 @@ npm install
 npm run build
 npm start (for http)
 npm run dev:https (for https)
-docker-compose up --build
 ```
 
 ---
@@ -118,7 +117,7 @@ The PWA is routed on HTTPS. Therefor a personalized ssl certificate is being use
 
 ## Dicoverable
 
-fullfilled
+Done
 
 ## Reengageable
 
@@ -130,7 +129,10 @@ A desktop shortcut can be created
 
 ## Linkable
 
-Done
+This PWA supports deep linking, meaning you can share and open specific views or content directly via URL. For example:
+```bash
+https://localhost:4173/?start=48.28789,9.73278&end=48.29895,9.72384
+```
 
 ## Sensorik
 
@@ -138,83 +140,3 @@ The PWA uses access on native interface. In the case of this PWA it uses GPS to 
 
 ---
 
-## 🛠 Framework7 CLI Setup
-
-This app was scaffolded using the Framework7 CLI with the following configuration:
-
-```json
-{
-  "name": "WebEng2",
-  "framework": "react",
-  "template": "single-view",
-  "bundler": "vite",
-  "type": ["pwa"],
-  "cssPreProcessor": false,
-  "theming": {
-    "customColor": false,
-    "color": "#007aff",
-    "darkMode": true,
-    "iconFonts": true
-  },
-  "customBuild": false
-}
-```
-
----
-
-## ⚡ Vite
-
-This project uses [Vite](https://vitejs.dev) for fast development and bundling. Source code resides in `/src`, and the config is in `vite.config.js`.
-
----
-
-## 🌐 Progressive Web App (PWA)
-
-This project is a PWA. In development, disable the service worker in DevTools if necessary.
-
-To regenerate the service worker manually:
-
-```bash
-npx workbox generateSW workbox-config.js
-```
-
----
-
-## 🖼 Assets Management
-
-Source images for icons and splash screens are in `assets-src`. To regenerate assets:
-
-```bash
-framework7 assets
-```
-
-Or use the asset editor UI:
-
-```bash
-framework7 assets --ui
-```
-
----
-
-## 📁 Project Structure Highlights
-
-- `src/` — Application source code
-- `public/` — Static files
-- `assets-src/` — Editable source assets
-- `workbox-config.js` — Service worker configuration
-- `vite.config.http.js` — Vite config for http
-- `vite.config.https.js` - Vite config for https
-- `docker/` — Dockerfile and Compose setup
-- `.devcontainer/` — Devcontainer configuration for VSCode
-
----
-
-## 📚 Documentation & Resources
-
-- [Framework7 Docs](https://framework7.io/docs/)
-- [Framework7 React](https://framework7.io/react/)
-- [Vite Documentation](https://vitejs.dev/)
-- [Workbox Docs](https://developer.chrome.com/docs/workbox/)
-- [Community Forum](https://forum.framework7.io)
-
----
